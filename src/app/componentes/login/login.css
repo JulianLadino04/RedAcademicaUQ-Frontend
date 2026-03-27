@@ -1,0 +1,21 @@
+.login-card{
+    width: 380px;
+    border-radius: 12px;
+}
+
+.card{
+    border: none;
+}
+
+.form-control{
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.btn{
+    border-radius: 8px;
+}
+
+body{
+    background-color: #f5f6fa;
+}
