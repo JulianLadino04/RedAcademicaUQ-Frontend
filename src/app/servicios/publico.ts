@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MensajeDTO } from '../dto/mensaje-dto';
+import { MensajeDTO } from '../dto/chat/mensaje-dto';
 import { Observable } from 'rxjs';
 @Injectable({
 providedIn: 'root'

@@ -1,0 +1,68 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+
+  <div class="card shadow-lg verificar-codigo-card">
+
+    <div class="card-body p-4">
+
+      <h4 class="text-center mb-4">
+        <i class="fa-solid fa-shield-check me-2"></i>
+        Verificar Código
+      </h4>
+
+      <p class="text-center text-muted mb-4">
+        Hemos enviado un código a <strong>{{ email }}</strong>
+      </p>
+
+      <form [formGroup]="codigoForm" (ngSubmit)="verificarCodigo()">
+
+        <div class="mb-4">
+          <label class="form-label">Código de Verificación</label>
+          <input
+            type="text"
+            class="form-control text-center form-control-lg codigo-input"
+            formControlName="codigo"
+            placeholder="000000"
+            maxlength="6"
+            [disabled]="cargando"
+            (input)="codigoForm.get('codigo')?.setValue(codigoForm.get('codigo')?.value.toUpperCase())">
+          <div *ngIf="codigoForm.get('codigo')?.invalid && codigoForm.get('codigo')?.touched" class="text-danger small mt-1">
+            <span *ngIf="codigoForm.get('codigo')?.errors?.['required']">El código es requerido</span>
+            <span *ngIf="codigoForm.get('codigo')?.errors?.['minlength']">El código debe tener al menos 6 caracteres</span>
+          </div>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button
+            type="submit"
+            class="btn btn-success btn-lg"
+            [disabled]="codigoForm.invalid || cargando">
+            <span *ngIf="!cargando">
+              <i class="fa-solid fa-check-circle me-2"></i>
+              Verificar Código
+            </span>
+            <span *ngIf="cargando">
+              <i class="fa-solid fa-spinner fa-spin me-2"></i>
+              Verificando...
+            </span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-light"
+            (click)="reenviarCodigo()"
+            [disabled]="cargando">
+            <i class="fa-solid fa-redo me-2"></i>
+            Reenviar Código
+          </button>
+          <a routerLink="/recuperar-password" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-2"></i>
+            Atrás
+          </a>
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>

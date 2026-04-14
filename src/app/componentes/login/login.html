@@ -9,14 +9,14 @@
         Iniciar Sesión
       </h4>
 
-      <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()">
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
 
         <div class="mb-3">
           <label class="form-label">Usuario</label>
           <input
             type="text"
             class="form-control"
-            formControlName="usuario"
+            formControlName="email"
             placeholder="Ingresa tu usuario">
         </div>
 
@@ -41,6 +41,18 @@
         </div>
 
       </form>
+
+      <!-- Sección de Recuperación de Contraseña -->
+      <div class="mt-4 pt-3 border-top">
+        <p class="text-center text-muted mb-2">
+          <i class="fa-solid fa-question-circle me-1"></i>
+          ¿Olvidaste tu contraseña?
+        </p>
+        <a routerLink="/recuperar-password" class="btn btn-link btn-sm d-grid">
+          <i class="fa-solid fa-key me-2"></i>
+          Recuperar Contraseña
+        </a>
+      </div>
 
     </div>
 

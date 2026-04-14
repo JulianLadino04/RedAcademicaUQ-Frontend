@@ -1,0 +1,91 @@
+.verificar-codigo-card {
+  width: 100%;
+  max-width: 400px;
+  border: none;
+  border-radius: 10px;
+}
+
+.verificar-codigo-card .card-body {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 10px;
+  color: white;
+}
+
+.verificar-codigo-card h4 {
+  font-weight: 600;
+  color: white;
+}
+
+.verificar-codigo-card .text-muted {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.verificar-codigo-card .form-label {
+  color: white;
+  font-weight: 500;
+}
+
+.codigo-input {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid transparent;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.codigo-input:focus {
+  background: white;
+  border-color: #f5576c;
+  box-shadow: none;
+}
+
+.verificar-codigo-card .form-control {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.verificar-codigo-card .form-control:focus {
+  background: white;
+  border-color: #f5576c;
+  box-shadow: none;
+}
+
+.verificar-codigo-card .btn-success {
+  background: white;
+  color: #f5576c;
+  border: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.verificar-codigo-card .btn-success:hover {
+  background: #f0f0f0;
+  color: #f5576c;
+  transform: translateY(-2px);
+}
+
+.verificar-codigo-card .btn-outline-light {
+  color: white;
+  border-color: white;
+  font-weight: 500;
+}
+
+.verificar-codigo-card .btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-color: white;
+}
+
+.verificar-codigo-card .btn-outline-secondary {
+  color: white;
+  border-color: white;
+  font-weight: 500;
+}
+
+.verificar-codigo-card .btn-outline-secondary:hover {
+  background: white;
+  color: #f5576c;
+  border-color: white;
+}

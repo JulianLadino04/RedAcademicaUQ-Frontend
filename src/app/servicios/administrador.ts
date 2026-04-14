@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MensajeDTO } from '../dto/mensaje-dto';
+import { MensajeDTO } from '../dto/chat/mensaje-dto';
 import { Observable } from 'rxjs';
-import { CrearEventoDTO } from '../dto/crear-evento-dto';
-import { EditarEventoDTO } from '../dto/editar-evento-dto';
+import { CrearEventoDTO } from '../dto/eventos/crear-evento.dto';
+import { EditarEventoDTO } from '../dto/eventos/editar-evento.dto';
 @Injectable({
 providedIn: 'root'
 })

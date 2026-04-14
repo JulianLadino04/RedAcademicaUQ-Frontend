@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControlOptions, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from
 '@angular/forms';
-import { CrearCuentaDTO } from '../../dto/crear-cuenta-dto';
+import { CrearCuentaDTO } from '../../dto/cuenta/crear-cuenta.dto';
 import { Auth } from '../../servicios/auth';
 import Swal from 'sweetalert2';
 

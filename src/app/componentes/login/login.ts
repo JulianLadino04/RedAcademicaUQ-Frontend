@@ -5,16 +5,16 @@ import {
   Validators,
   ReactiveFormsModule
 } from '@angular/forms';
-
+import { Router, RouterModule } from '@angular/router';
 import { Auth } from '../../servicios/auth';
 import Swal from 'sweetalert2';
-import { LoginDTO } from '../../dto/login-dto';
+import { LoginDTO } from '../../dto/cuenta/login.dto';
 import { Token } from '../../servicios/token';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })

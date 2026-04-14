@@ -27,12 +27,18 @@ export class Token {
 
   public login(token: string) {
     this.setToken(token);
-    this.router.navigate(["/"]);
+    const rol = this.getRol();
+    let destino = rol == "ADMINISTRADOR" ? "/panel-admin" : "/";
+    this.router.navigate([destino]).then(() => {
+    window.location.reload();
+    });
   }
 
   public logout() {
     window.sessionStorage.clear();
-    this.router.navigate(["/login"]);
+    this.router.navigate(["/login"]).then(() => {
+    window.location.reload();
+    });
   }
 
   private decodePayload(token: string): any {
@@ -56,6 +62,14 @@ export class Token {
       const values = this.decodePayload(token);
       return values.rol;
     }
-return "";
-}
+    return "";
+  }
+  public getEmail(): string {
+    const token = this.getToken();
+    if (token) {
+      const values = this.decodePayload(token);
+    return values.sub;
+    }
+    return "";
+  }
 }
