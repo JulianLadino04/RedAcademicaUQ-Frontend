@@ -48,7 +48,7 @@
           <input type="password" class="form-control" formControlName="confirmaPassword">
         </div>
 
-        @if (registroForm.hasError('passwordsMismatch')) {
+        @if (registroForm.hasError('passwordsMismatch') && (registroForm.get('confirmaPassword')?.touched || registroForm.get('confirmaPassword')?.dirty)) {
           <div class="alert alert-danger" role="alert">
             Las contraseñas no coinciden
           </div>

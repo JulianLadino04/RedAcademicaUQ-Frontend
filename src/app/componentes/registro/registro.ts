@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControlOptions, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from
 '@angular/forms';
-import { CrearCuentaDTO } from '../../dto/cuenta/crear-cuenta.dto';
+import { CrearEstudianteDTO } from '../../dto/cuenta/crear-estudiante';
 import { Auth } from '../../servicios/auth';
 import Swal from 'sweetalert2';
 
@@ -26,7 +26,8 @@ private crearFormulario() {
   email: ['', [Validators.required, Validators.email]],
   direccion: ['', [Validators.required]],
   telefono: ['', [Validators.required, Validators.maxLength(10)]],
-  password: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(7)]]
+  password: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(7)]],
+  confirmaPassword: ['', [Validators.required]]
   },
   { validators: this.passwordsMatchValidator } as AbstractControlOptions
 );
@@ -41,8 +42,9 @@ passwordsMatchValidator(formGroup: FormGroup) {
 }
 
 public registrar() {
-  const crearCuenta = this.registroForm.value as CrearCuentaDTO;
-  this.authService.crearCuenta(crearCuenta).subscribe({
+  const formValue = this.registroForm.value;
+  const { confirmaPassword, ...crearEstudiante } = formValue;
+  this.authService.crearCuenta(crearEstudiante as CrearEstudianteDTO).subscribe({
   next: (data: any) => {
     Swal.fire({
       title: 'Cuenta creada',

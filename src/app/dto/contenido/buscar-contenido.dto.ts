@@ -6,5 +6,5 @@ export interface BuscarContenidoDTO {
   autor: string
   textoBusqueda: string
   pagina: number
-  tamaño: number
+  tamano: number
 }

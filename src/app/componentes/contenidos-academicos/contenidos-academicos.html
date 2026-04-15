@@ -1,0 +1,94 @@
+<div class="container mt-4 mb-5">
+  <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+    <div>
+      <h2 class="mb-1 titulo-principal">Contenidos Académicos</h2>
+      <p class="text-muted mb-0 subtitulo">Explora recursos por tema, tipo de contenido o autor</p>
+    </div>
+  </div>
+
+  <div class="card filtro-card mb-4">
+    <div class="card-body">
+      <form [formGroup]="searchForm" (ngSubmit)="buscarContenidos()" class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Buscar</label>
+          <input type="text" class="form-control" formControlName="textoBusqueda" placeholder="Título, contenido...">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Tema</label>
+          <select class="form-select" formControlName="tema">
+            <option value="">Todos</option>
+            <option *ngFor="let tema of temas" [value]="tema">{{ tema }}</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" formControlName="tipoContenido">
+            <option value="">Todos</option>
+            <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipo }}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Autor</label>
+          <input type="text" class="form-control" formControlName="autor" placeholder="Nombre del autor">
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary me-2 w-100" [disabled]="cargando">
+            <i class="fa-solid fa-search me-1"></i>Buscar
+          </button>
+          <button type="button" class="btn btn-light border w-100" (click)="limpiarFiltros()">
+            <i class="fa-solid fa-eraser me-1"></i>Limpiar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!cargando">
+    <div class="col-md-4 mb-4" *ngFor="let contenido of contenidos">
+      <div class="card h-100 contenido-card">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+            <span class="badge tema-badge">{{ contenido.tema }}</span>
+            <span class="badge tipo-badge">{{ contenido.tipoContenido }}</span>
+          </div>
+
+          <h5 class="card-title mb-2">{{ contenido.titulo }}</h5>
+
+          <p class="card-text descripcion-preview mb-3">
+            {{ contenido.contenido | slice:0:120 }}...
+          </p>
+
+          <div class="meta-info mt-auto">
+            <p class="card-text text-muted mb-1">
+              <i class="fa-solid fa-user me-2"></i>{{ contenido.autor }}
+            </p>
+            <p class="card-text text-muted mb-1">
+              <i class="fa-solid fa-star me-2"></i>{{ contenido.puntuacionPromedio | number:'1.1-1' }} / 5
+            </p>
+            <p class="card-text text-muted mb-0">
+              <i class="fa-solid fa-calendar-days me-2"></i>{{ contenido.fechaCreacion | date:'short' }}
+            </p>
+          </div>
+        </div>
+
+        <div class="card-footer bg-transparent border-0 pt-0">
+          <button class="btn btn-primary btn-sm w-100 btn-ver-mas">Ver más</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando && contenidos.length === 0" class="text-center empty-state mt-5">
+    <div class="empty-icon mb-3">
+      <i class="fa-solid fa-folder-open"></i>
+    </div>
+    <p class="text-muted mb-0">No se encontraron contenidos académicos.</p>
+  </div>
+
+  <div *ngIf="cargando" class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="text-muted mt-3">Cargando contenidos...</p>
+  </div>
+</div>

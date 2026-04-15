@@ -42,10 +42,20 @@ export class Token {
   }
 
   private decodePayload(token: string): any {
-    const payload = token!.split(".")[1];
-    const payloadDecoded = Buffer.from(payload, 'base64').toString('ascii');
-    const values = JSON.parse(payloadDecoded);
-    return values;
+    if (!token || !token.includes('.')) {
+      return {};
+    }
+    const payload = token.split(".")[1];
+    if (!payload) {
+      return {};
+    }
+    try {
+      const payloadDecoded = Buffer.from(payload, 'base64').toString('ascii');
+      const values = JSON.parse(payloadDecoded);
+      return values;
+    } catch (e) {
+      return {};
+    }
   }
 
   public getIDCuenta(): string {
@@ -72,4 +82,19 @@ export class Token {
     }
     return "";
   }
+
+  public verTokenDecodificado(): any {
+    const token = this.getToken();
+
+    if (!token) {
+      console.log('❌ No hay token');
+      return null;
+    }
+
+    const values = this.decodePayload(token);
+    console.log('📦 Token decodificado:', values);
+
+    return values;
+  }
+
 }

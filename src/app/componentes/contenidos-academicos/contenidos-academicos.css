@@ -1,0 +1,134 @@
+body {
+  background-color: #f8fafc;
+}
+
+.titulo-principal {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.subtitulo {
+  font-size: 0.95rem;
+}
+
+.filtro-card {
+  border: none;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.45rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 12px;
+  border: 1px solid #dbe2ea;
+  padding: 0.7rem 0.9rem;
+  box-shadow: none;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.18rem rgba(13, 110, 253, 0.12);
+}
+
+.contenido-card {
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.contenido-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 35px rgba(15, 23, 42, 0.14);
+}
+
+.card-title {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.descripcion-preview {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  min-height: 76px;
+}
+
+.meta-info {
+  border-top: 1px solid #eef2f7;
+  padding-top: 1rem;
+}
+
+.meta-info p {
+  font-size: 0.9rem;
+}
+
+.tema-badge {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.tipo-badge {
+  background: #ede9fe;
+  color: #6d28d9;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.btn-primary {
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.btn-light {
+  border-radius: 12px;
+  font-weight: 600;
+  background-color: #f8fafc;
+}
+
+.btn-ver-mas {
+  padding: 0.65rem 1rem;
+  border-radius: 12px;
+}
+
+.card-footer {
+  padding: 0 1rem 1rem 1rem;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.empty-state {
+  padding: 2rem 1rem;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  .descripcion-preview {
+    min-height: auto;
+  }
+}

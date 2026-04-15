@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CrearCuentaDTO } from '../dto/cuenta/crear-cuenta.dto';
+import { CrearEstudianteDTO } from '../dto/cuenta/crear-estudiante';
 import { LoginDTO } from '../dto/cuenta/login.dto';
 import { RecuperarPasswordDTO } from '../dto/cuenta/recuperar-password.dto';
 import { VerificarCodigoDTO } from '../dto/cuenta/verificar-codigo.dto';
 import { RestablecerPasswordDTO } from '../dto/cuenta/restablecer-password.dto';
-import { MensajeDTO } from '../dto/chat/mensaje-dto';
+import { MensajeDTO } from '../dto/mensaje-dto';
+import { TokenDTO } from '../dto/token-dto';
 import { Observable } from 'rxjs';
+import { obtenerNombreDTO } from '../dto/cuenta/obtener-nombre';
 
 @Injectable({
   providedIn: 'root'
@@ -16,12 +18,14 @@ export class Auth {
   
   constructor(private http: HttpClient) { }
 
-  public crearCuenta(cuentaDTO: CrearCuentaDTO): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.authURL}/crear-cuenta`, cuentaDTO);
+  //ESTUDIANTES
+
+  public crearCuenta(cuentaDTO: CrearEstudianteDTO): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.authURL}/crear-estudiante`, cuentaDTO);
   }
 
-  public iniciarSesion(loginDTO: LoginDTO): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.authURL}/iniciar-sesion`, loginDTO);
+  public iniciarSesion(loginDTO: LoginDTO): Observable<TokenDTO> {
+    return this.http.post<TokenDTO>(`${this.authURL}/iniciar-sesion`, loginDTO);
   }
 
   public recuperarPassword(recuperarDTO: RecuperarPasswordDTO): Observable<MensajeDTO> {
@@ -29,10 +33,15 @@ export class Auth {
   }
 
   public verificarCodigo(verificarDTO: VerificarCodigoDTO): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.authURL}/verificar-codigo`, verificarDTO);
+    return this.http.post<MensajeDTO>(`${this.authURL}/verificar-codigo-recuperacion`, verificarDTO);
   }
 
   public restablecerPassword(restablecerDTO: RestablecerPasswordDTO): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.authURL}/restablecer-password`, restablecerDTO);
+    return this.http.put<MensajeDTO>(`${this.authURL}/restablecer-password`, restablecerDTO);
   }
+
+  public obtenerNombre(ObtenerNombreDTO : obtenerNombreDTO): Observable<MensajeDTO> {
+    return this.http.put<MensajeDTO>(`${this.authURL}/obtener-nombre`, ObtenerNombreDTO);
+  }
+  
 }

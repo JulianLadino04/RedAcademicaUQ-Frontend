@@ -7,6 +7,7 @@ import { DetalleEvento } from './componentes/detalle-evento/detalle-evento';
 import { RecuperarPassword } from './componentes/recuperar-password/recuperar-password';
 import { VerificarCodigo } from './componentes/verificar-codigo/verificar-codigo';
 import { RestablecerPassword } from './componentes/restablecer-password/restablecer-password';
+import { ContenidosAcademicos } from './componentes/contenidos-academicos/contenidos-academicos';
 import { LoginGuard } from './guards/permiso';
 
 
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'restablecer-password', component: RestablecerPassword, canActivate: [LoginGuard] },
   { path: "gestion-eventos", component: GestionEventos },
   { path: 'detalle-evento/:id', component: DetalleEvento },
+  { path: 'contenidos-academicos', component: ContenidosAcademicos },
   
 
 ];

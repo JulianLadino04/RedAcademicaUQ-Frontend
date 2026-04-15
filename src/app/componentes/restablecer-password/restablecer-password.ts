@@ -78,8 +78,7 @@ export class RestablecerPassword implements OnInit {
     const restablecerDTO: RestablecerPasswordDTO = {
       email: this.email,
       codigo: this.codigo,
-      password: this.restablecerForm.get('password')?.value,
-      confirmPassword: this.restablecerForm.get('confirmPassword')?.value
+      passwordNueva: this.restablecerForm.get('password')?.value
     };
 
     this.authService.restablecerPassword(restablecerDTO).subscribe({

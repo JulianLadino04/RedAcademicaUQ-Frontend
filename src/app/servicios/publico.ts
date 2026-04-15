@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MensajeDTO } from '../dto/chat/mensaje-dto';
 import { Observable } from 'rxjs';
+import { BuscarContenidoDTO } from '../dto/contenido/buscar-contenido.dto';
 @Injectable({
 providedIn: 'root'
 })
@@ -20,5 +21,11 @@ export class PublicoService {
   }
   public obtenerEvento(id: string): Observable<MensajeDTO> {
     return this.http.get<MensajeDTO>(`${this.publicoURL}/evento/obtener/${id}`);
+  }
+  public listarContenidos(buscarDTO: BuscarContenidoDTO): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.publicoURL}/contenido/buscar`, buscarDTO);
+  }
+  public obtenerContenido(id: string): Observable<MensajeDTO> {
+    return this.http.get<MensajeDTO>(`${this.publicoURL}/contenido/obtener/${id}`);
   }
 }
