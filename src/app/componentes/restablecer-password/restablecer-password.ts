@@ -92,7 +92,7 @@ export class RestablecerPassword implements OnInit {
       },
       error: (error) => {
         this.cargando = false;
-        const mensaje = error.error?.mensaje || 'Error al actualizar la contraseña';
+        const mensaje = error.error?.respuesta || error.error?.mensaje || 'Error al actualizar la contraseña';
         Swal.fire('Error', mensaje, 'error');
       }
     });

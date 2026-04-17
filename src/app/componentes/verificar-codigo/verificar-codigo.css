@@ -1,91 +1,196 @@
-.verificar-codigo-card {
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.verify-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 15px;
+}
+
+.verify-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 36px 30px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
   border: none;
-  border-radius: 10px;
 }
 
-.verificar-codigo-card .card-body {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  border-radius: 10px;
-  color: white;
+.verify-header {
+  margin-bottom: 28px;
 }
 
-.verificar-codigo-card h4 {
+.verify-icon {
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #ef4444);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 30px;
+  box-shadow: 0 12px 28px rgba(239, 68, 68, 0.22);
+}
+
+.verify-header h2 {
+  margin-bottom: 8px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.verify-header p {
+  margin: 0 0 12px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.email-badge {
+  display: inline-block;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
   font-weight: 600;
-  color: white;
+  max-width: 100%;
+  word-break: break-word;
 }
 
-.verificar-codigo-card .text-muted {
-  color: rgba(255, 255, 255, 0.8) !important;
+.verify-form .form-group {
+  margin-bottom: 22px;
 }
 
-.verificar-codigo-card .form-label {
-  color: white;
-  font-weight: 500;
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.form-control {
+  width: 100%;
+  height: 56px;
+  border-radius: 14px;
+  border: 1px solid #dbe2ea;
+  padding: 10px 14px;
+  font-size: 14px;
+  transition: all 0.25s ease;
+  box-shadow: none;
+  background: #ffffff;
+}
+
+.form-control:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+  outline: none;
+}
+
+.form-control:disabled {
+  background: #f1f5f9;
+  cursor: not-allowed;
 }
 
 .codigo-input {
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid transparent;
-  font-size: 24px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 10px;
+  color: #0f172a;
+}
+
+.validation-text {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #dc2626;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn {
+  width: 100%;
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 8px;
-  transition: border-color 0.3s ease;
-}
-
-.codigo-input:focus {
-  background: white;
-  border-color: #f5576c;
-  box-shadow: none;
-}
-
-.verificar-codigo-card .form-control {
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid transparent;
-  transition: border-color 0.3s ease;
-}
-
-.verificar-codigo-card .form-control:focus {
-  background: white;
-  border-color: #f5576c;
-  box-shadow: none;
-}
-
-.verificar-codigo-card .btn-success {
-  background: white;
-  color: #f5576c;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.25s ease;
   border: none;
-  font-weight: 600;
-  transition: all 0.3s ease;
 }
 
-.verificar-codigo-card .btn-success:hover {
-  background: #f0f0f0;
-  color: #f5576c;
-  transform: translateY(-2px);
+.btn-verify {
+  background: linear-gradient(135deg, #ec4899, #ef4444);
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(239, 68, 68, 0.18);
 }
 
-.verificar-codigo-card .btn-outline-light {
-  color: white;
-  border-color: white;
-  font-weight: 500;
+.btn-verify:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(239, 68, 68, 0.24);
 }
 
-.verificar-codigo-card .btn-outline-light:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border-color: white;
+.btn-verify:disabled {
+  background: #cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
 }
 
-.verificar-codigo-card .btn-outline-secondary {
-  color: white;
-  border-color: white;
-  font-weight: 500;
+.btn-resend {
+  background: #ffffff;
+  color: #e11d48;
+  border: 1px solid #fbcfe8;
 }
 
-.verificar-codigo-card .btn-outline-secondary:hover {
-  background: white;
-  color: #f5576c;
-  border-color: white;
+.btn-resend:hover:not(:disabled) {
+  background: #fff1f2;
+  border-color: #f9a8d4;
+}
+
+.btn-back {
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #dbe2ea;
+}
+
+.btn-back:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+@media (max-width: 576px) {
+  .verify-card {
+    padding: 28px 20px;
+    border-radius: 18px;
+  }
+
+  .verify-header h2 {
+    font-size: 24px;
+  }
+
+  .verify-header p {
+    font-size: 13px;
+  }
+
+  .codigo-input {
+    font-size: 24px;
+    letter-spacing: 6px;
+  }
 }

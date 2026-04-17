@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Auth } from '../../servicios/auth';
 import { Token } from '../../servicios/token';
+import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -31,49 +33,56 @@ export class Login implements OnInit {
   }
 
   public iniciarSesion() {
-
     console.log('🚀 Iniciando proceso de login...');
+      if (this.loginForm.invalid) {
+        console.warn('⚠️ Formulario inválido:', this.loginForm.value);
+        Swal.fire('Error', 'Por favor completa correctamente el correo y la contraseña', 'error');
+        return;
+      }
 
-    if (this.loginForm.invalid) {
-      console.warn('⚠️ Formulario inválido:', this.loginForm.value);
+      const loginDTO = this.loginForm.value;
+
+      console.log('📤 Datos enviados al backend:', loginDTO);
+
+      this.authService.iniciarSesion(loginDTO).subscribe({
+        next: (response: any) => {
+    console.log('📥 RESPUESTA REAL:', response);
+
+    if (!response || !response.datos || !response.datos.token) {
+      Swal.fire('Error', 'Respuesta inválida del servidor', 'error');
       return;
     }
 
-    const loginDTO = this.loginForm.value;
+    // 🔍 Mostrar el token completo
+    console.log('🔐 TOKEN COMPLETO:', response.datos.token);
 
-    console.log('📤 Datos enviados al backend:', loginDTO);
+    // 🔍 Mostrar tipo de dato
+    console.log('🔍 Tipo de token:', typeof response.datos.token);
 
-    this.authService.iniciarSesion(loginDTO).subscribe({
-      next: (data: any) => {
+    // 🔍 Mostrar longitud (útil para validar JWT)
+    console.log('📏 Longitud del token:', response.datos.token.length);
 
-        console.log('📥 Respuesta COMPLETA del backend:', data);
-        console.log('🔍 Tipo de dato:', typeof data);
+    const token = response.datos.token;
 
-        if (!data) {
-          console.error('❌ La respuesta es NULL');
-          return;
-        }
+    this.tokenService.login(token);
 
-        console.log('🔐 Token recibido:', data.token);
+    console.log('✅ Token guardado en el servicio');
 
-        if (!data.token) {
-          console.error('❌ No viene el token en la respuesta');
-          this.error = 'Token no recibido';
-          return;
-        }
-
-        // Guardar token
-        this.tokenService.login(data.token);
-
-        console.log('✅ Token guardado correctamente');
-
-      },
-      error: (err: any) => {
+    Swal.fire('Éxito', 'Inicio de sesión exitoso', 'success');
+    this.router.navigate(['/']);
+  },
+    error: (err: any) => {
         console.error('❌ ERROR COMPLETO:', err);
         console.error('📛 Status:', err.status);
         console.error('📛 Mensaje:', err.error);
 
-        this.error = err.error?.message || 'Error en login';
+        const mensaje =
+          err.error?.respuesta ||
+          err.error?.mensaje ||
+          err.error?.message ||
+          'Error en el inicio de sesión';
+
+        Swal.fire('Error', mensaje, 'error');
       },
       complete: () => {
         console.log('🏁 Proceso de login finalizado');

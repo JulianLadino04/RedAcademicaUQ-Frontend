@@ -68,7 +68,7 @@ export class VerificarCodigo implements OnInit {
       },
       error: (error) => {
         this.cargando = false;
-        const mensaje = error.error?.mensaje || 'Código inválido o expirado';
+        const mensaje = error.error?.respuesta || error.error?.mensaje ||'Código inválido o expirado';
         Swal.fire('Error', mensaje, 'error');
       }
     });
@@ -83,7 +83,7 @@ export class VerificarCodigo implements OnInit {
       },
       error: (error) => {
         this.cargando = false;
-        const mensaje = error.error?.mensaje || 'Error al reenviar el código';
+        const mensaje = error.error?.respuesta || error.error?.mensaje || 'Error al reenviar el código';
         Swal.fire('Error', mensaje, 'error');
       }
     });

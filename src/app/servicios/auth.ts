@@ -9,6 +9,7 @@ import { MensajeDTO } from '../dto/mensaje-dto';
 import { TokenDTO } from '../dto/token-dto';
 import { Observable } from 'rxjs';
 import { obtenerNombreDTO } from '../dto/cuenta/obtener-nombre';
+import { ResponseDTO } from '../dto/shared/response.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +25,8 @@ export class Auth {
     return this.http.post<MensajeDTO>(`${this.authURL}/crear-estudiante`, cuentaDTO);
   }
 
-  public iniciarSesion(loginDTO: LoginDTO): Observable<TokenDTO> {
-    return this.http.post<TokenDTO>(`${this.authURL}/iniciar-sesion`, loginDTO);
+  public iniciarSesion(loginDTO: LoginDTO): Observable<any> {
+    return this.http.post(`${this.authURL}/iniciar-sesion`, loginDTO);
   }
 
   public recuperarPassword(recuperarDTO: RecuperarPasswordDTO): Observable<MensajeDTO> {

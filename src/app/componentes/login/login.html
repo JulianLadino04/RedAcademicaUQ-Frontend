@@ -1,36 +1,75 @@
-<form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()">
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-header text-center">
+      <div class="login-icon">
+        <i class="fa-solid fa-user-graduate"></i>
+      </div>
+      <h2>Bienvenido</h2>
+      <p>Ingresa con tu correo y contraseña para continuar</p>
+    </div>
 
-  <div class="mb-3">
-    <label class="form-label">Correo Institucional</label>
-    <input
-      type="email"
-      class="form-control"
-      formControlName="email"
-      placeholder="Ingresa tu email">
+    <form [formGroup]="loginForm" (ngSubmit)="iniciarSesion()" class="login-form">
+
+      <div class="form-group">
+        <label class="form-label">Correo institucional</label>
+        <div class="input-group-custom">
+          <span class="input-icon">
+            <i class="fa-solid fa-envelope"></i>
+          </span>
+          <input
+            type="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="Ingresa tu correo">
+        </div>
+
+        <small
+          class="text-danger validation-text"
+          *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+          Ingresa un correo válido.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Contraseña</label>
+        <div class="input-group-custom">
+          <span class="input-icon">
+            <i class="fa-solid fa-lock"></i>
+          </span>
+          <input
+            type="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="Ingresa tu contraseña">
+        </div>
+
+        <small
+          class="text-danger validation-text"
+          *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          La contraseña es obligatoria.
+        </small>
+      </div>
+
+      <div class="login-links">
+        <a routerLink="/recuperar-password" class="link-recuperar">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </div>
+
+      <div class="d-grid mt-3">
+        <button
+          type="submit"
+          class="btn btn-login"
+          [disabled]="loginForm.invalid">
+          <i class="fa-solid fa-right-to-bracket me-2"></i>
+          Ingresar
+        </button>
+      </div>
+
+    </form>
+
+    <p [hidden]="!error" class="error-box">
+      <i class="fa-solid fa-circle-exclamation me-2"></i>{{ error }}
+    </p>
   </div>
-
-  <div class="mb-4">
-    <label class="form-label">Contraseña</label>
-    <input
-      type="password"
-      class="form-control"
-      formControlName="password"
-      placeholder="Ingresa tu contraseña">
-  </div>
-
-  <div class="d-grid">
-    <button
-      type="submit"
-      class="btn btn-primary btn-lg"
-      [disabled]="loginForm.invalid">
-
-      <i class="fa-solid fa-right-to-bracket me-2"></i>
-      Ingresar
-    </button>
-  </div>
-
-</form>
-
-<p [hidden]="!error" class="text-danger mt-3 text-center">
-  {{error}}
-</p>
+</div>

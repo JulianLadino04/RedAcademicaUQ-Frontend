@@ -42,25 +42,37 @@ passwordsMatchValidator(formGroup: FormGroup) {
 }
 
 public registrar() {
+  if (this.registroForm.invalid) {
+    this.registroForm.markAllAsTouched();
+    Swal.fire({
+      title: 'Formulario incompleto',
+      text: 'Por favor completa correctamente todos los campos',
+      icon: 'warning',
+      confirmButtonText: 'Aceptar'
+    });
+    return;
+  }
+
   const formValue = this.registroForm.value;
   const { confirmaPassword, ...crearEstudiante } = formValue;
+
   this.authService.crearCuenta(crearEstudiante as CrearEstudianteDTO).subscribe({
-  next: (data: any) => {
-    Swal.fire({
-      title: 'Cuenta creada',
-      text: 'La cuenta se ha creado correctamente',
-      icon: 'success',
-      confirmButtonText: 'Aceptar'
-    })
-  },
-  error: (error: any) => {
-    Swal.fire({
-      title: 'Error',
-      text: error.error.respuesta,
-      icon: 'error',
-      confirmButtonText: 'Aceptar'
-    })
-  }
-});
+    next: () => {
+      Swal.fire({
+        title: 'Cuenta creada',
+        text: 'La cuenta se ha creado correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      });
+    },
+    error: (error: any) => {
+      Swal.fire({
+        title: 'Error',
+        text: error.error?.respuesta || error.error?.mensaje || 'No fue posible crear la cuenta',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+    }
+  });
 }
 }
