@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { AbstractControlOptions, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from
 '@angular/forms';
-import { CrearEstudianteDTO } from '../../dto/cuenta/crear-estudiante';
+import { CrearEstudianteDTO } from '../../dto/estudiante/crear-estudiante.dto';
 import { Auth } from '../../servicios/auth';
 import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
 
 @Component({
 selector: 'app-registro',
 standalone: true,
-imports: [ReactiveFormsModule],
+imports: [ReactiveFormsModule, CommonModule],
 templateUrl: './registro.html',
 styleUrl: './registro.css'
 })

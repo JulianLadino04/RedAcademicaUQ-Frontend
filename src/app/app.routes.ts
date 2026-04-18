@@ -9,6 +9,8 @@ import { VerificarCodigo } from './componentes/verificar-codigo/verificar-codigo
 import { RestablecerPassword } from './componentes/restablecer-password/restablecer-password';
 import { ContenidosAcademicos } from './componentes/contenidos-academicos/contenidos-academicos';
 import { LoginGuard } from './guards/permiso';
+import { AgendarAsesoriaComponent } from './componentes/agendar-asesoria/agendar-asesoria';
+import { ResolverSolicitudComponent } from './componentes/resolver-solicitud/resolver-solicitud';
 
 
 export const routes: Routes = [
@@ -23,6 +25,6 @@ export const routes: Routes = [
   { path: "gestion-eventos", component: GestionEventos },
   { path: 'detalle-evento/:id', component: DetalleEvento },
   { path: 'contenidos-academicos', component: ContenidosAcademicos },
-  
-
-];
+  { path: 'agendar-asesoria', component: AgendarAsesoriaComponent },
+  { path: 'resolver-solicitud', component: ResolverSolicitudComponent }
+  ];

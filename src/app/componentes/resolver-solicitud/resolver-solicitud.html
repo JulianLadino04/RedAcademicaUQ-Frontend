@@ -1,0 +1,84 @@
+<div class="container mt-4 mb-5">
+  <!-- Encabezado -->
+  <div class="mb-4">
+    <h2 class="titulo-principal mb-1">
+      <i class="fa-solid fa-list-check me-2"></i>Solicitudes Pendientes
+    </h2>
+    <p class="text-muted subtitulo">Selecciona una solicitud y presiona Resolver</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="text-muted mt-3">Cargando solicitudes...</p>
+  </div>
+
+  <!-- Lista vacía -->
+  <div *ngIf="!cargando && solicitudes.length === 0" class="text-center mt-5">
+    <div class="empty-icon mb-3">
+      <i class="fa-solid fa-inbox"></i>
+    </div>
+    <p class="text-muted mb-0">No hay solicitudes pendientes.</p>
+  </div>
+
+  <!-- Lista deslizable -->
+  <div *ngIf="!cargando && solicitudes.length > 0" class="solicitudes-scroll">
+    <div class="solicitudes-container">
+      <div 
+        *ngFor="let solicitud of solicitudes"
+        class="solicitud-item"
+        [class.seleccionada]="estaSeleccionada(solicitud.id)"
+        (click)="seleccionar(solicitud.id)">
+        
+        <!-- Header con tema y urgencia -->
+        <div class="item-header">
+          <span class="badge badge-tema">{{ solicitud.tema }}</span>
+          <span class="badge" [ngClass]="getColorUrgencia(solicitud.urgencia)">
+            <i [class]="'fa-solid ' + getIconoUrgencia(solicitud.urgencia)"></i>
+            {{ solicitud.urgencia }}/5
+          </span>
+        </div>
+
+        <!-- Body -->
+        <div class="item-body">
+          <!-- Solicitante -->
+          <div class="info-row">
+            <span class="info-label">
+              <i class="fa-solid fa-user"></i>Solicitante
+            </span>
+            <span class="info-value">{{ solicitud.solicitanteNombre }}</span>
+          </div>
+
+          <!-- Descripción -->
+          <div class="info-row">
+            <span class="info-label">
+              <i class="fa-solid fa-align-left"></i>Descripción
+            </span>
+            <span class="info-value descripcion">{{ solicitud.descripcion }}</span>
+          </div>
+
+          <!-- Fecha -->
+          <div class="info-row">
+            <span class="info-label">
+              <i class="fa-solid fa-calendar"></i>Fecha
+            </span>
+            <span class="info-value small">{{ formatearFecha(solicitud.fechaSolicitud) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón Resolver (abajo) -->
+  <div *ngIf="!cargando && solicitudes.length > 0" class="resolver-section">
+    <button 
+      class="btn btn-resolver"
+      [disabled]="!solicitudSeleccionada"
+      (click)="resolver()">
+      <i class="fa-solid fa-arrow-right me-2"></i>Resolver
+    </button>
+  </div>
+
+</div>

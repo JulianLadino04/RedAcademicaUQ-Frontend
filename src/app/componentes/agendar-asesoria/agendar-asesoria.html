@@ -1,0 +1,207 @@
+<div class="container mt-4 mb-5">
+  <!-- Encabezado con título -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+    <div>
+      <h2 class="mb-1 titulo-principal">
+        <i class="fa-solid fa-calendar-check me-2"></i>Agendar Asesoría
+      </h2>
+      <p class="text-muted mb-0 subtitulo">Solicita una asesoría con un profesor disponible</p>
+    </div>
+  </div>
+
+  <!-- Mensaje de éxito -->
+  <div *ngIf="mostrarMensajeExito" class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="fa-solid fa-check-circle me-2"></i>
+    <strong>¡Asesoría agendada exitosamente!</strong> 
+    Serás redirigido a tus asesorías en unos momentos.
+    <button type="button" class="btn-close" (click)="mostrarMensajeExito = false"></button>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="mensajeError" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fa-solid fa-exclamation-circle me-2"></i>
+    <strong>Error:</strong> {{ mensajeError }}
+    <button type="button" class="btn-close" (click)="mensajeError = ''"></button>
+  </div>
+
+  <!-- Formulario en card -->
+  <div class="card filtro-card">
+    <div class="card-body">
+      <form [formGroup]="formularioAgendar" (ngSubmit)="agendar()">
+        <!-- Grid de formulario -->
+        <div class="row g-3">
+
+          <!-- Campo: Asesor -->
+          <div class="col-md-6">
+            <label for="asesor" class="form-label">
+              <i class="fa-solid fa-user-tie me-1"></i>Asesor
+            </label>
+            <select 
+              id="asesor"
+              class="form-select"
+              [class.is-invalid]="campoAsesorError && formularioAgendar.get('asesor')?.touched"
+              formControlName="asesor"
+              [disabled]="cargando">
+              <option value="" disabled selected>Selecciona un asesor</option>
+              <option *ngFor="let asesor of asesores" [value]="asesor.id">
+                {{ asesor.nombre }}
+              </option>
+            </select>
+            <div class="invalid-feedback" *ngIf="campoAsesorError && formularioAgendar.get('asesor')?.touched">
+              Debes seleccionar un asesor
+            </div>
+          </div>
+
+          <!-- Campo: Título -->
+          <div class="col-md-6">
+            <label for="titulo" class="form-label">
+              <i class="fa-solid fa-heading me-1"></i>Título
+            </label>
+            <input 
+              type="text"
+              id="titulo"
+              class="form-control"
+              [class.is-invalid]="campoTituloError && formularioAgendar.get('titulo')?.touched"
+              placeholder="Tema de la asesoría"
+              formControlName="titulo">
+            <div class="invalid-feedback" *ngIf="formularioAgendar.get('titulo')?.hasError('required') && formularioAgendar.get('titulo')?.touched">
+              El título es requerido
+            </div>
+            <div class="invalid-feedback" *ngIf="formularioAgendar.get('titulo')?.hasError('minlength') && formularioAgendar.get('titulo')?.touched">
+              El título debe tener al menos 5 caracteres
+            </div>
+          </div>
+
+          <!-- Campo: Descripción (ancho completo) -->
+          <div class="col-12">
+            <label for="descripcion" class="form-label">
+              <i class="fa-solid fa-align-left me-1"></i>Descripción
+            </label>
+            <textarea 
+              id="descripcion"
+              class="form-control"
+              [class.is-invalid]="campoDescripcionError && formularioAgendar.get('descripcion')?.touched"
+              placeholder="Describe con detalle qué necesitas ayuda"
+              rows="4"
+              formControlName="descripcion"></textarea>
+            <div class="invalid-feedback" *ngIf="formularioAgendar.get('descripcion')?.hasError('required') && formularioAgendar.get('descripcion')?.touched">
+              La descripción es requerida
+            </div>
+            <div class="invalid-feedback" *ngIf="formularioAgendar.get('descripcion')?.hasError('minlength') && formularioAgendar.get('descripcion')?.touched">
+              La descripción debe tener al menos 10 caracteres
+            </div>
+            <small class="text-muted d-block mt-1">
+              <i class="fa-solid fa-info-circle me-1"></i>
+              Mínimo 10 caracteres
+            </small>
+          </div>
+
+          <!-- Campo: Fecha -->
+          <div class="col-md-6">
+            <label for="fecha" class="form-label">
+              <i class="fa-solid fa-calendar-days me-1"></i>Fecha
+            </label>
+            <input 
+              type="date"
+              id="fecha"
+              class="form-control"
+              [class.is-invalid]="campoFechaError && formularioAgendar.get('fecha')?.touched"
+              formControlName="fecha">
+            <div class="invalid-feedback" *ngIf="campoFechaError && formularioAgendar.get('fecha')?.touched">
+              Debes seleccionar una fecha
+            </div>
+            <small class="text-muted d-block mt-1">
+              <i class="fa-solid fa-info-circle me-1"></i>
+              Selecciona una fecha futura
+            </small>
+          </div>
+
+          <!-- Campo: Hora de Inicio -->
+          <div class="col-md-6">
+            <label for="horaInicio" class="form-label">
+              <i class="fa-solid fa-clock me-1"></i>Hora Inicio
+            </label>
+            <input 
+              type="time"
+              id="horaInicio"
+              class="form-control"
+              [class.is-invalid]="campoHoraError && formularioAgendar.get('horaInicio')?.touched"
+              formControlName="horaInicio">
+            <div class="invalid-feedback" *ngIf="campoHoraError && formularioAgendar.get('horaInicio')?.touched">
+              Debes seleccionar una hora válida
+            </div>
+            <small class="text-muted d-block mt-1">
+              <i class="fa-solid fa-info-circle me-1"></i>
+              Mínimo una hora desde ahora
+            </small>
+          </div>
+
+          <!-- Campo: Medios -->
+          <div class="col-md-6">
+            <label for="medios" class="form-label">
+              <i class="fa-solid fa-video me-1"></i>Medios
+            </label>
+            <select 
+              id="medios"
+              class="form-select"
+              [class.is-invalid]="campoMediosError && formularioAgendar.get('medios')?.touched"
+              formControlName="medios">
+              <option value="" disabled selected>Selecciona un medio</option>
+              <option *ngFor="let medio of medios" [value]="medio">
+                {{ medio }}
+              </option>
+            </select>
+            <div class="invalid-feedback" *ngIf="campoMediosError && formularioAgendar.get('medios')?.touched">
+              Debes seleccionar un medio
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="row g-2 mt-4">
+          <div class="col-md-3">
+            <button 
+              type="submit" 
+              class="btn btn-primary w-100"
+              [disabled]="enviando || cargando">
+              <span *ngIf="!enviando">
+                <i class="fa-solid fa-check me-1"></i>Agendar
+              </span>
+              <span *ngIf="enviando">
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Agendando...
+              </span>
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button 
+              type="button" 
+              class="btn btn-light border w-100"
+              (click)="limpiarFormulario()">
+              <i class="fa-solid fa-eraser me-1"></i>Limpiar
+            </button>
+          </div>
+          <div class="col-md-6 d-flex align-items-center">
+            <button 
+              type="button" 
+              class="btn btn-link text-decoration-none"
+              (click)="volver()">
+              <i class="fa-solid fa-arrow-left me-1"></i>Volver
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Loading spinner mientras carga asesores -->
+  <div *ngIf="cargando" class="text-center mt-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="text-muted mt-3">Cargando asesores disponibles...</p>
+  </div>
+
+</div>

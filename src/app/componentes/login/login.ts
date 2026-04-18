@@ -5,6 +5,7 @@ import { Auth } from '../../servicios/auth';
 import { Token } from '../../servicios/token';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
+import { LoginDTO } from '../../dto/cuenta/login.dto';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +41,7 @@ export class Login implements OnInit {
         return;
       }
 
-      const loginDTO = this.loginForm.value;
+      const loginDTO = this.loginForm.value as LoginDTO;
 
       console.log('📤 Datos enviados al backend:', loginDTO);
 
