@@ -11,6 +11,8 @@ import { ContenidosAcademicos } from './componentes/contenidos-academicos/conten
 import { LoginGuard } from './guards/permiso';
 import { AgendarAsesoriaComponent } from './componentes/agendar-asesoria/agendar-asesoria';
 import { ResolverSolicitudComponent } from './componentes/resolver-solicitud/resolver-solicitud';
+import { SolicitarAyudaComponent } from './componentes/solicitar-ayuda/solicitar-ayuda';
+import { ChatComponent } from './componentes/chat/html';
 
 
 export const routes: Routes = [
@@ -26,5 +28,7 @@ export const routes: Routes = [
   { path: 'detalle-evento/:id', component: DetalleEvento },
   { path: 'contenidos-academicos', component: ContenidosAcademicos },
   { path: 'agendar-asesoria', component: AgendarAsesoriaComponent },
-  { path: 'resolver-solicitud', component: ResolverSolicitudComponent }
+  { path: 'resolver-solicitud', component: ResolverSolicitudComponent },
+  { path: 'solicitar-ayuda', component: SolicitarAyudaComponent },
+  { path: 'chat', component: ChatComponent },
   ];

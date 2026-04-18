@@ -1,0 +1,72 @@
+<div class="container-fluid py-5 bg-fondo">
+  <div class="mb-5 text-center">
+    <h2 class="titulo-principal mb-1">
+      <i class="fa-solid fa-hand-holding-hand me-2"></i>Solicitar Ayuda Académica
+    </h2>
+    <p class="subtitulo">Completa los detalles para que un compañero pueda apoyarte.</p>
+  </div>
+
+  <div class="row justify-content-center px-3">
+    <div class="col-md-10 col-lg-7">
+      
+      <form [formGroup]="solicitudForm" (ngSubmit)="enviarSolicitud()" class="marco-3d p-4 p-md-5">
+        
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label class="form-label-u">
+              <i class="fa-solid fa-book-bookmark me-2 text-primary"></i>Selecciona un tema
+            </label>
+            <select formControlName="tema" class="form-select border-2">
+              <option value="" disabled selected>Elegir materia...</option>
+              <option *ngFor="let tema of temasMock" [value]="tema">{{ tema }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <label class="form-label-u">
+              <i class="fa-solid fa-bolt me-2 text-warning"></i>Nivel de urgencia
+            </label>
+            <select formControlName="urgencia" class="form-select border-2">
+              <option value="" disabled selected>Nivel de urgencia...</option>
+              <option *ngFor="let nivel of nivelesUrgencia" [value]="nivel">Nivel {{ nivel }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mb-5">
+          <label class="form-label-u">
+            <i class="fa-solid fa-pen-to-square me-2 text-primary"></i>Descripción
+          </label>
+          <textarea 
+            formControlName="descripcion" 
+            class="form-control border-2" 
+            rows="4" 
+            placeholder="Describe tu duda o el problema que quieres resolver...">
+          </textarea>
+          <div class="text-end mt-1"><small class="text-muted">Mínimo 10 caracteres.</small></div>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-center gap-3 mb-4">
+          <button type="submit" class="btn btn-primary btn-lg-u shadow" [disabled]="solicitudForm.invalid || cargando">
+            <i class="fa-solid fa-paper-plane me-2"></i>Enviar Solicitud
+          </button>
+
+          <button type="button" class="btn btn-info-u btn-lg-u shadow-sm" (click)="verSolicitudes()">
+            <i class="fa-solid fa-list-check me-2"></i>Ver Solicitudes
+          </button>
+
+          <button type="button" class="btn btn-light-u btn-lg-u border shadow-sm" (click)="volver()">
+            <i class="fa-solid fa-arrow-left me-2"></i>Volver
+          </button>
+        </div>
+
+        <div class="text-center pt-4 border-top">
+          <button type="button" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="fa-solid fa-graduation-cap me-2"></i>Ver Cursos Gratis en Coursera
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+<div class="chat-container">
+  
+  <!-- BANDEJA LATERAL - LISTA DE CHATS -->
+  <div class="sidebar-chats">
+    
+    <!-- Encabezado bandeja -->
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">
+        <i class="fa-solid fa-comments me-2"></i>Mensajes
+      </h2>
+    </div>
+
+    <!-- Loading bandeja -->
+    <div *ngIf="cargando" class="text-center mt-4">
+      <div class="spinner-border spinner-border-sm text-primary"></div>
+    </div>
+
+    <!-- Lista de chats -->
+    <div *ngIf="!cargando && chats.length > 0" class="chats-list">
+      <div 
+        *ngFor="let chat of chats"
+        class="chat-item"
+        [class.activo]="estaSeleccionado(chat)"
+        (click)="seleccionarChat(chat)">
+        
+        <!-- Avatar -->
+        <div class="chat-avatar">
+          <div class="avatar-circle">
+            {{ getNombreOtroUsuario(chat).charAt(0) }}
+          </div>
+        </div>
+
+        <!-- Info chat -->
+        <div class="chat-info">
+          <p class="chat-nombre">{{ getNombreOtroUsuario(chat) }}</p>
+          <p class="chat-preview">{{ truncarMensaje(chat.ultimoMensaje) }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sin chats -->
+    <div *ngIf="!cargando && chats.length === 0" class="text-center mt-4">
+      <p class="text-muted small">No hay chats aún</p>
+    </div>
+
+  </div>
+
+  <!-- ÁREA PRINCIPAL - CHAT ABIERTO O VACÍO -->
+  <div class="chat-main">
+    
+    <!-- Si no hay chat seleccionado -->
+    <div *ngIf="!chatSeleccionado" class="chat-empty">
+      <div class="empty-state">
+        <i class="fa-solid fa-comments"></i>
+        <p class="text-muted">Selecciona una conversación</p>
+      </div>
+    </div>
+
+    <!-- Chat abierto -->
+    <div *ngIf="chatSeleccionado" class="chat-abierto">
+      
+      <!-- Header del chat -->
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <h3 class="chat-title">{{ getNombreOtroUsuario(chatSeleccionado) }}</h3>
+        </div>
+        <button class="btn btn-volver" (click)="volver()">
+          <i class="fa-solid fa-arrow-left me-2"></i>Volver
+        </button>
+      </div>
+
+      <!-- Área de mensajes -->
+      <div class="mensajes-area" #mensajesScroll>
+        <div *ngFor="let mensaje of chatSeleccionado.mensajes" 
+          class="mensaje"
+          [class.propio]="mensaje.esPropio">
+          <div class="mensaje-contenido">
+            <p class="mensaje-texto">{{ mensaje.contenido }}</p>
+            <span class="mensaje-fecha">{{ formatearFecha(mensaje.fecha) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input de mensaje -->
+      <div class="input-area">
+        <div class="input-group">
+          <input 
+            type="text"
+            class="form-control input-mensaje"
+            placeholder="Escribe un mensaje..."
+            [(ngModel)]="nuevoMensaje"
+            (keyup.enter)="enviarMensaje()"
+            [disabled]="enviando">
+          <button 
+            class="btn btn-enviar"
+            (click)="enviarMensaje()"
+            [disabled]="!nuevoMensaje.trim() || enviando">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
