@@ -9,6 +9,7 @@ import { VerificarCodigo } from './componentes/verificar-codigo/verificar-codigo
 import { RestablecerPassword } from './componentes/restablecer-password/restablecer-password';
 import { ContenidosAcademicos } from './componentes/contenidos-academicos/contenidos-academicos';
 import { LoginGuard } from './guards/permiso';
+import { SubirContenidoAcademico } from './subir-contenido-academico/subir-contenido-academico';
 
 
 export const routes: Routes = [
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: "gestion-eventos", component: GestionEventos },
   { path: 'detalle-evento/:id', component: DetalleEvento },
   { path: 'contenidos-academicos', component: ContenidosAcademicos },
+  { path: 'subir-contenido', component: SubirContenidoAcademico }
   
 
 ];

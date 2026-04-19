@@ -11,8 +11,9 @@
       <form [formGroup]="searchForm" (ngSubmit)="buscarContenidos()" class="row g-3">
         <div class="col-md-3">
           <label class="form-label">Buscar</label>
-          <input type="text" class="form-control" formControlName="textoBusqueda" placeholder="Título, contenido...">
+          <input type="text" class="form-control" formControlName="textoBusqueda" placeholder="Título...">
         </div>
+
         <div class="col-md-2">
           <label class="form-label">Tema</label>
           <select class="form-select" formControlName="tema">
@@ -20,6 +21,7 @@
             <option *ngFor="let tema of temas" [value]="tema">{{ tema }}</option>
           </select>
         </div>
+
         <div class="col-md-2">
           <label class="form-label">Tipo</label>
           <select class="form-select" formControlName="tipoContenido">
@@ -27,10 +29,12 @@
             <option *ngFor="let tipo of tipos" [value]="tipo">{{ tipo }}</option>
           </select>
         </div>
+
         <div class="col-md-3">
           <label class="form-label">Autor</label>
           <input type="text" class="form-control" formControlName="autor" placeholder="Nombre del autor">
         </div>
+
         <div class="col-md-2 d-flex align-items-end">
           <button type="submit" class="btn btn-primary me-2 w-100" [disabled]="cargando">
             <i class="fa-solid fa-search me-1"></i>Buscar
@@ -55,7 +59,7 @@
           <h5 class="card-title mb-2">{{ contenido.titulo }}</h5>
 
           <p class="card-text descripcion-preview mb-3">
-            {{ contenido.contenido | slice:0:120 }}...
+            Archivo académico disponible para consulta.
           </p>
 
           <div class="meta-info mt-auto">
@@ -63,7 +67,10 @@
               <i class="fa-solid fa-user me-2"></i>{{ contenido.autor }}
             </p>
             <p class="card-text text-muted mb-1">
-              <i class="fa-solid fa-star me-2"></i>{{ contenido.puntuacionPromedio | number:'1.1-1' }} / 5
+              <i class="fa-solid fa-file me-2"></i>{{ contenido.nombreArchivo }}
+            </p>
+            <p class="card-text text-muted mb-1">
+              <i class="fa-solid fa-weight-hanging me-2"></i>{{ formatearTamano(contenido.tamanoBytes) }}
             </p>
             <p class="card-text text-muted mb-0">
               <i class="fa-solid fa-calendar-days me-2"></i>{{ contenido.fechaCreacion | date:'short' }}
@@ -71,9 +78,11 @@
           </div>
         </div>
 
-        <div class="card-footer bg-transparent border-0 pt-0">
-          <button class="btn btn-primary btn-sm w-100 btn-ver-mas">Ver más</button>
-        </div>
+        <button
+          class="btn btn-primary btn-sm w-100 btn-ver-mas"
+          (click)="verContenido(contenido)">
+          Ver más
+        </button>
       </div>
     </div>
   </div>

@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { PublicoService } from '../../servicios/publico';
 import { BuscarContenidoDTO } from '../../dto/contenido/buscar-contenido.dto';
 import { InformacionContenidoAcademicoDTO } from '../../dto/contenido/informacion-contenido-academico.dto';
 import { Tema, TipoContenido } from '../../dto/enums';
 import { CommonModule } from '@angular/common';
 import { ContenidosAcademicosService } from '../../servicios/contenido-academico';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-contenidos-academicos',
@@ -22,7 +22,6 @@ export class ContenidosAcademicos implements OnInit {
   cargando = false;
 
   constructor(
-    private publicoService: PublicoService,
     private contenidoAcademico: ContenidosAcademicosService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef
@@ -30,12 +29,12 @@ export class ContenidosAcademicos implements OnInit {
     this.crearFormulario();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     console.log('Componente ContenidosAcademicos inicializado');
     this.cargarTodosLosContenidos();
   }
 
-  private crearFormulario() {
+  private crearFormulario(): void {
     this.searchForm = this.fb.group({
       textoBusqueda: [''],
       tema: [''],
@@ -44,20 +43,20 @@ export class ContenidosAcademicos implements OnInit {
     });
   }
 
-  public buscarContenidos() {
+  public buscarContenidos(): void {
     this.cargando = true;
     this.cdr.detectChanges();
 
     const buscarDTO: BuscarContenidoDTO = {
       ...this.searchForm.value,
       pagina: 0,
-      tamaño: 50
+      tamano: 50
     };
 
     this.contenidoAcademico.listarContenidos(buscarDTO).subscribe({
       next: (data: any) => {
         console.log('Respuesta búsqueda:', data);
-        this.contenidos = Array.isArray(data?.datos) ? [...data.datos] : [];
+        this.contenidos = Array.isArray(data?.respuesta) ? [...data.respuesta] : [];
         this.cargando = false;
         this.cdr.detectChanges();
       },
@@ -66,11 +65,18 @@ export class ContenidosAcademicos implements OnInit {
         this.contenidos = [];
         this.cargando = false;
         this.cdr.detectChanges();
+
+        Swal.fire({
+          title: 'Error',
+          text: error.error?.respuesta || 'No fue posible buscar los contenidos académicos',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
   }
 
-  public cargarTodosLosContenidos() {
+  public cargarTodosLosContenidos(): void {
     console.log('Cargando todos los contenidos...');
     this.cargando = true;
     this.cdr.detectChanges();
@@ -78,10 +84,10 @@ export class ContenidosAcademicos implements OnInit {
     this.contenidoAcademico.obtenerTodosContenidos().subscribe({
       next: (data: any) => {
         console.log('Respuesta obtenida:', JSON.stringify(data));
-        console.log('¿Es arreglo?', Array.isArray(data?.datos));
-        console.log('Cantidad en data.datos:', data?.datos?.length);
+        console.log('¿Es arreglo?', Array.isArray(data?.respuesta));
+        console.log('Cantidad en data.respuesta:', data?.respuesta?.length);
 
-        this.contenidos = Array.isArray(data?.datos) ? [...data.datos] : [];
+        this.contenidos = Array.isArray(data?.respuesta) ? [...data.respuesta] : [];
 
         console.log('Contenidos finales:', this.contenidos);
         console.log('Contenidos cargados:', this.contenidos.length);
@@ -94,12 +100,55 @@ export class ContenidosAcademicos implements OnInit {
         this.contenidos = [];
         this.cargando = false;
         this.cdr.detectChanges();
+
+        Swal.fire({
+          title: 'Error',
+          text: error.error?.respuesta || 'No fue posible cargar los contenidos académicos',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
       }
     });
   }
 
-  public limpiarFiltros() {
+  public limpiarFiltros(): void {
     this.searchForm.reset();
     this.cargarTodosLosContenidos();
+  }
+
+  public formatearTamano(bytes: number): string {
+    if (!bytes && bytes !== 0) return 'No disponible';
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  public verContenido(contenido: InformacionContenidoAcademicoDTO): void {
+    if (!contenido.id) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Este contenido no tiene identificador válido',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+
+    this.contenidoAcademico.descargarArchivo(contenido.id).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      },
+      error: (error) => {
+        console.error('Error al abrir archivo:', error);
+
+        Swal.fire({
+          title: 'Error',
+          text: error.error?.respuesta || 'No fue posible abrir el archivo',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
   }
 }
