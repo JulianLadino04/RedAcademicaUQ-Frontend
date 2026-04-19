@@ -9,6 +9,7 @@ import { VerificarCodigo } from './componentes/verificar-codigo/verificar-codigo
 import { RestablecerPassword } from './componentes/restablecer-password/restablecer-password';
 import { ContenidosAcademicos } from './componentes/contenidos-academicos/contenidos-academicos';
 import { LoginGuard } from './guards/permiso';
+import { SubirContenidoAcademico } from './subir-contenido-academico/subir-contenido-academico';
 import { AgendarAsesoriaComponent } from './componentes/agendar-asesoria/agendar-asesoria';
 import { ResolverSolicitudComponent } from './componentes/resolver-solicitud/resolver-solicitud';
 import { SolicitarAyudaComponent } from './componentes/solicitar-ayuda/solicitar-ayuda';
@@ -27,8 +28,6 @@ export const routes: Routes = [
   { path: "gestion-eventos", component: GestionEventos },
   { path: 'detalle-evento/:id', component: DetalleEvento },
   { path: 'contenidos-academicos', component: ContenidosAcademicos },
-  { path: 'agendar-asesoria', component: AgendarAsesoriaComponent },
-  { path: 'resolver-solicitud', component: ResolverSolicitudComponent },
-  { path: 'solicitar-ayuda', component: SolicitarAyudaComponent },
-  { path: 'chat', component: ChatComponent },
-  ];
+  
+
+];

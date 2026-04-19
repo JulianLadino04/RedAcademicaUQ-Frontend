@@ -1,0 +1,151 @@
+<div class="upload-wrapper">
+  <div class="upload-card">
+
+    <div class="upload-header text-center">
+      <div class="upload-icon">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+      </div>
+      <h2>Subir contenido académico</h2>
+      <p>Completa la información del recurso y selecciona el archivo que deseas publicar</p>
+    </div>
+
+    <form [formGroup]="contenidoForm" (ngSubmit)="subirContenido()" class="upload-form">
+
+      <div class="form-group">
+        <label class="form-label">Título</label>
+        <div class="input-group-custom">
+          <span class="input-icon">
+            <i class="fa-solid fa-file-lines"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="titulo"
+            placeholder="Ingresa el título del contenido">
+        </div>
+
+        @if (contenidoForm.get('titulo')?.invalid && contenidoForm.get('titulo')?.touched) {
+          <small class="validation-text">El título es obligatorio</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tema</label>
+        <div class="input-group-custom">
+          <span class="input-icon">
+            <i class="fa-solid fa-layer-group"></i>
+          </span>
+          <select class="form-control form-select-custom" formControlName="tema">
+            <option value="">Selecciona un tema</option>
+            <option *ngFor="let tema of temas" [value]="tema.value">
+              {{ tema.label }}
+            </option>
+          </select>
+        </div>
+
+        @if (contenidoForm.get('tema')?.invalid && contenidoForm.get('tema')?.touched) {
+          <small class="validation-text">Debes seleccionar un tema</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tipo de contenido</label>
+        <div class="input-group-custom">
+          <span class="input-icon">
+            <i class="fa-solid fa-folder-tree"></i>
+          </span>
+          <select class="form-control form-select-custom" formControlName="tipoContenido">
+            <option value="">Selecciona el tipo de archivo</option>
+            <option *ngFor="let tipo of tiposArchivo" [value]="tipo.value">
+              {{ tipo.label }}
+            </option>
+          </select>
+        </div>
+
+        @if (contenidoForm.get('tipoContenido')?.invalid && contenidoForm.get('tipoContenido')?.touched) {
+          <small class="validation-text">Debes seleccionar un tipo de contenido</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Autor</label>
+        <div class="input-group-custom">
+          <span class="input-icon">
+            <i class="fa-solid fa-user-pen"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="autor"
+            placeholder="Ingresa el nombre del autor">
+        </div>
+
+        @if (contenidoForm.get('autor')?.invalid && contenidoForm.get('autor')?.touched) {
+          <small class="validation-text">El autor es obligatorio</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Archivo</label>
+
+        <div class="file-box">
+          <input
+            type="file"
+            #fileInput
+            hidden
+            (change)="onArchivoSeleccionado($event)">
+
+          <button
+            type="button"
+            class="btn btn-file"
+            (click)="fileInput.click()">
+            <i class="fa-solid fa-folder-open me-2"></i>
+            Seleccionar archivo
+          </button>
+
+          <div class="file-name" *ngIf="nombreArchivo">
+            <i class="fa-solid fa-paperclip me-2"></i>
+            {{ nombreArchivo }}
+          </div>
+
+          <div class="file-name muted" *ngIf="!nombreArchivo">
+            No has seleccionado ningún archivo
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">
+          <i class="fa-solid fa-circle-info me-2"></i>
+          Recomendación
+        </div>
+        <p>Verifica que el archivo corresponda al tipo seleccionado y que el título sea claro para facilitar su consulta.</p>
+      </div>
+
+      <div class="button-group">
+        <button
+          type="submit"
+          class="btn btn-upload"
+          [disabled]="contenidoForm.invalid || !archivoSeleccionado || cargando">
+          <span *ngIf="!cargando">
+            <i class="fa-solid fa-cloud-arrow-up me-2"></i>
+            Subir contenido
+          </span>
+          <span *ngIf="cargando">
+            <i class="fa-solid fa-spinner fa-spin me-2"></i>
+            Subiendo...
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-cancel"
+          (click)="cancelar()">
+          <i class="fa-solid fa-xmark me-2"></i>
+          Cancelar
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
