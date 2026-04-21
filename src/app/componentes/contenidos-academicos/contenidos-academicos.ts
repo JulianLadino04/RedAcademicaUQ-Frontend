@@ -48,20 +48,26 @@ export class ContenidosAcademicos implements OnInit {
     this.cdr.detectChanges();
 
     const buscarDTO: BuscarContenidoDTO = {
-      ...this.searchForm.value,
+      textoBusqueda: this.searchForm.value.textoBusqueda?.trim() || null,
+      tema: this.searchForm.value.tema || null,
+      tipoContenido: this.searchForm.value.tipoContenido || null,
+      autor: this.searchForm.value.autor?.trim() || null,
       pagina: 0,
       tamano: 50
     };
 
+    console.log('📤 DTO enviado al backend:', buscarDTO);
+
     this.contenidoAcademico.listarContenidos(buscarDTO).subscribe({
       next: (data: any) => {
-        console.log('Respuesta búsqueda:', data);
+        console.log('✅ Respuesta búsqueda:', data);
         this.contenidos = Array.isArray(data?.respuesta) ? [...data.respuesta] : [];
         this.cargando = false;
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error al buscar contenidos:', error);
+        console.error('❌ Error al buscar contenidos:', error);
+        console.error('❌ Body del error:', error.error);
         this.contenidos = [];
         this.cargando = false;
         this.cdr.detectChanges();
