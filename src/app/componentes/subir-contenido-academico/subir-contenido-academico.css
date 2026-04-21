@@ -1,0 +1,389 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600&display=swap');
+
+:host {
+  display: block;
+
+  --accent: #1a56a0;
+  --accent-dark: #123f78;
+  --accent-light: #2d6dbc;
+  --accent-soft: #eaf2fd;
+  --accent-soft-2: #f5f9ff;
+  --accent-border: #cfe0f8;
+
+  --success-soft: #eefaf2;
+  --warning-soft: #fff8e8;
+  --danger: #c62828;
+  --danger-soft: #fff2f2;
+
+  --surface: #ffffff;
+  --surface-2: #f8fbff;
+  --page-bg-1: #eef2ff;
+  --page-bg-2: #f8fafc;
+
+  --text-primary: #172033;
+  --text-secondary: #5f6b85;
+  --text-muted: #8a94a8;
+
+  --border: #dbe4f0;
+  --border-strong: #c7d4e4;
+  --border-soft: #e9eff6;
+
+  --shadow-xs: 0 2px 8px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 8px 22px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 16px 38px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 24px 52px rgba(15, 23, 42, 0.12);
+  --shadow-focus: 0 0 0 4px rgba(26, 86, 160, 0.12);
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== FONDO GENERAL ===== */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(26, 86, 160, 0.08), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(26, 86, 160, 0.05), transparent 22%),
+    linear-gradient(135deg, var(--page-bg-1) 0%, var(--page-bg-2) 100%);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ===== CONTENEDOR ===== */
+.upload-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 36px 16px;
+}
+
+/* ===== TARJETA PRINCIPAL ===== */
+.upload-card {
+  width: 100%;
+  max-width: 780px;
+  background:
+    radial-gradient(circle at top right, rgba(26, 86, 160, 0.05), transparent 24%),
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  border-radius: var(--radius-xl);
+  padding: 40px 34px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, var(--accent) 0%, #4c87d2 58%, #a6caf6 100%);
+}
+
+.upload-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== ENCABEZADO ===== */
+.upload-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.upload-icon {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 30px;
+  box-shadow: 0 14px 30px rgba(26, 86, 160, 0.22);
+}
+
+.upload-header h2 {
+  margin-bottom: 8px;
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.upload-header p {
+  margin: 0 auto;
+  max-width: 560px;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ===== FORMULARIO ===== */
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== LABELS ===== */
+.form-label {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+}
+
+/* ===== INPUT GROUP ===== */
+.input-group-custom {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-size: 14px;
+  z-index: 2;
+  transition: color var(--transition);
+}
+
+/* ===== CAMPOS ===== */
+.form-control {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  padding: 10px 14px 10px 42px;
+  font-size: 0.94rem;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition),
+    background var(--transition),
+    transform var(--transition);
+  box-shadow: none;
+  background: var(--surface-2);
+  color: var(--text-primary);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.form-control:hover {
+  background: #ffffff;
+  border-color: var(--accent-border);
+}
+
+.form-control:focus {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-focus);
+  outline: none;
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.input-group-custom:focus-within .input-icon {
+  color: var(--accent);
+}
+
+.form-select-custom {
+  appearance: none;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #64748b 50%),
+    linear-gradient(135deg, #64748b 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+/* ===== VALIDACIONES ===== */
+.validation-text {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: var(--danger);
+  font-weight: 500;
+}
+
+/* ===== BLOQUE DE ARCHIVO ===== */
+.file-box {
+  background: linear-gradient(180deg, #f8fbff 0%, #f4f8fe 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+  text-align: center;
+}
+
+/* botón seleccionar archivo */
+.btn-file {
+  background: #ffffff;
+  color: var(--accent);
+  border: 1.5px solid var(--accent-border);
+  width: 100%;
+  box-shadow: var(--shadow-xs);
+}
+
+.btn-file:hover {
+  background: var(--accent-soft);
+  border-color: #9fc3f2;
+  color: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+/* nombre archivo */
+.file-name {
+  margin-top: 12px;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.file-name.muted {
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px dashed #cbd5e1;
+}
+
+/* ===== BLOQUE DE INFORMACIÓN ===== */
+.info-box {
+  background: linear-gradient(180deg, #f8fbff 0%, #f4f8fe 100%);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-top: 4px;
+}
+
+.info-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.info-box p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+/* ===== BOTONES PRINCIPALES ===== */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-upload {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(26, 86, 160, 0.2);
+}
+
+.btn-upload:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(26, 86, 160, 0.28);
+  background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+}
+
+.btn-upload:disabled {
+  background: #cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
+  color: #ffffff;
+}
+
+.btn-cancel {
+  background: #ffffff;
+  color: var(--text-primary);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn-cancel:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .upload-card {
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+
+  .upload-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .upload-header p {
+    font-size: 0.9rem;
+  }
+
+  .upload-icon {
+    width: 74px;
+    height: 74px;
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 576px) {
+  .upload-wrapper {
+    padding: 20px 12px;
+  }
+
+  .upload-card {
+    padding: 22px 16px;
+  }
+
+  .form-control {
+    font-size: 0.92rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+  }
+}

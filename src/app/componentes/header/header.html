@@ -1,28 +1,43 @@
-<div class="container">
-  <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
+<header class="main-header">
+  <div class="header-container">
 
-    <div class="col-md-3 mb-2 mb-md-0">
-      <a routerLink="" class="d-inline-flex link-body-emphasis text-decoration-none align-items-center">
-        <i class="fa-solid fa-ticket fs-3"></i>
-        <span class="fs-4 ms-3 me-3">{{title}}</span>
+    <div class="brand-section">
+      <a routerLink="/" class="brand-link">
+        <img src="img\logo-red-academica-uq.png" alt="Logo Red Académica UQ" class="brand-logo">
+        <span class="brand-title">{{ title }}</span>
       </a>
     </div>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-      <li><a routerLink="" class="nav-link px-2 link-secondary">Inicio</a></li>
-      <li><a routerLink="/contenidos-academicos" class="nav-link px-2">Contenidos Académicos</a></li>
-      <li><a routerLink="/subir-contenido" class="nav-link px-2">Subir Contenido</a></li>
-    </ul>
+    <nav class="nav-section">
+      <ul class="nav-list">
+        @for (link of navLinks; track link.route) {
+          @if (puedeVer(link)) {
+            <li class="nav-item">
+              <a
+                [routerLink]="link.route"
+                routerLinkActive="active-link"
+                [routerLinkActiveOptions]="{ exact: link.route === '/' }"
+                class="nav-link">
+                {{ link.label }}
+              </a>
+            </li>
+          }
+        }
+      </ul>
+    </nav>
 
-    <div class="col-md-3 d-flex text-end align-items-center">
+    <div class="actions-section">
       @if (!isLogged) {
-        <button type="button" routerLink="/login" class="btn btn-outline-primary me-2">Login</button>
-        <button type="button" routerLink="/registro" class="btn btn-primary">Registro</button>
+        <a routerLink="/login" class="btn btn-outline">Login</a>
+        <a routerLink="/registro" class="btn btn-primary">Registro</a>
       } @else {
-        <label class="me-3">Hola, {{user}}</label>
+        <div class="user-box">
+          <span class="welcome-text">Hola, {{ user }}</span>
+          <span class="role-badge">{{ rol }}</span>
+        </div>
         <button type="button" (click)="logout()" class="btn btn-primary">Logout</button>
       }
     </div>
 
-  </header>
-</div>
+  </div>
+</header>

@@ -2,12 +2,15 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
-/**
- * Componente para agendar asesorías CON DATOS MOCK
- * Esta es la versión de DESARROLLO para ver el diseño
- * sin necesidad de conectar con backend
- */
+import { Token } from '../../servicios/token';
+import { AsesoriaService } from '../../servicios/asesorias';
+import { MentorService } from '../../servicios/mentores';
+
+import { CrearAsesoriaDTO } from '../../dto/asesoria/crear-asesoria.dto';
+import { InformacionMentorDTO } from '../../dto/mentor/informacion-mentor.dto';
+
 @Component({
   selector: 'app-agendar-asesoria',
   standalone: true,
@@ -17,41 +20,49 @@ import { Router } from '@angular/router';
 })
 export class AgendarAsesoriaComponent implements OnInit {
   formularioAgendar!: FormGroup;
-  
-  asesores = [
-    { id: 1, nombre: 'Dr. Juan García López', especialidad: 'Matemática', disponible: true },
-    { id: 2, nombre: 'Dra. María López Pérez', especialidad: 'Física', disponible: true },
-    { id: 3, nombre: 'Prof. Carlos Díaz Ruiz', especialidad: 'Programación', disponible: true },
-    { id: 4, nombre: 'Ing. Patricia González', especialidad: 'Cálculo', disponible: true },
-    { id: 5, nombre: 'Prof. Roberto Sánchez', especialidad: 'Álgebra', disponible: false }
+
+  temas: string[] = [
+    'MATEMATICAS',
+    'LENGUAJE',
+    'CIENCIAS_NATURALES',
+    'CIENCIAS_SOCIALES',
+    'INGLES',
+    'TECNOLOGIA',
+    'INFORMATICA',
+    'OTRO'
   ];
-  
+
+  asesores: InformacionMentorDTO[] = [];
+
   medios: string[] = ['Presencial', 'Virtual', 'Híbrido'];
-  
-  cargando = false;  // Desactiva el spinner de carga
+
+  cargando = false;
+  cargandoMentores = false;
   enviando = false;
   mostrarMensajeExito = false;
   mensajeError = '';
+  mensajeExito = '';
   horaMinima: string = '';
 
   constructor(
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private tokenService: Token,
+    private asesoriaService: AsesoriaService,
+    private mentorService: MentorService
   ) {
     this.crearFormulario();
     this.establecerHoraMinima();
   }
 
   ngOnInit() {
-    console.log('Componente AgendarAsesoria inicializado (MODO DESARROLLO)');
+    console.log('Componente AgendarAsesoria inicializado');
   }
 
-  /**
-   * Crea el formulario reactivo con validaciones
-   */
   private crearFormulario() {
     this.formularioAgendar = this.fb.group({
+      tema: ['', [Validators.required]],
       asesor: ['', [Validators.required]],
       titulo: ['', [Validators.required, Validators.minLength(5)]],
       descripcion: ['', [Validators.required, Validators.minLength(10)]],
@@ -61,93 +72,154 @@ export class AgendarAsesoriaComponent implements OnInit {
     });
   }
 
-  /**
-   * Establece la hora mínima para evitar seleccionar horas pasadas
-   */
   private establecerHoraMinima() {
     const ahora = new Date();
     ahora.setHours(ahora.getHours() + 1);
     this.horaMinima = ahora.toTimeString().slice(0, 5);
   }
 
-  /**
-   * Simula el envío del formulario (sin conectar backend)
-   */
+  private construirFechaHora(fecha: string, hora: string): string {
+    return `${fecha}T${hora}:00`;
+  }
+
+  private obtenerSolicitanteId(): string | null {
+    const data = this.tokenService.verTokenDecodificado();
+    console.log('🔐 Token decodificado:', data);
+
+    return data?.id || data?._id || data?.userId || data?.sub || null;
+  }
+
+  public cargarMentoresPorTema() {
+    const tema = this.formularioAgendar.get('tema')?.value;
+
+    this.asesores = [];
+    this.formularioAgendar.get('asesor')?.setValue('');
+    this.mensajeError = '';
+
+    if (!tema) return;
+
+    this.cargandoMentores = true;
+
+    this.mentorService.buscarPorEspecialidad(tema).subscribe({
+      next: (respuesta) => {
+        this.asesores = respuesta.datos || [];
+        this.cargandoMentores = false;
+
+        if (this.asesores.length === 0) {
+          this.mensajeError = 'No hay mentores disponibles para el tema seleccionado.';
+        }
+
+        this.cdr.detectChanges();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('❌ Error al cargar mentores:', error);
+        this.cargandoMentores = false;
+        this.mensajeError = error.error?.mensaje || 'No fue posible cargar los mentores.';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   public agendar() {
     if (this.formularioAgendar.invalid) {
+      this.formularioAgendar.markAllAsTouched();
       this.mensajeError = 'Por favor completa todos los campos correctamente.';
+      return;
+    }
+
+    const solicitanteId = this.obtenerSolicitanteId();
+
+    if (!solicitanteId) {
+      this.mensajeError = 'No se pudo identificar el usuario autenticado.';
       return;
     }
 
     this.enviando = true;
     this.mensajeError = '';
     this.mostrarMensajeExito = false;
+    this.mensajeExito = '';
     this.cdr.detectChanges();
 
     const datosFormulario = this.formularioAgendar.value;
-    console.log('📋 Datos del formulario:', datosFormulario);
 
-    // Simulamos un delay de 1.5 segundos como si fuera una petición HTTP
-    setTimeout(() => {
-      console.log('✅ Asesoría agendada (simulada)');
-      this.mostrarMensajeExito = true;
-      this.formularioAgendar.reset();
-      this.enviando = false;
-      this.cdr.detectChanges();
+    const dto: CrearAsesoriaDTO = {
+      solicitanteId: solicitanteId,
+      asesorId: datosFormulario.asesor,
+      tema: datosFormulario.tema,
+      fechaHora: this.construirFechaHora(datosFormulario.fecha, datosFormulario.horaInicio),
+      descripcion: `${datosFormulario.titulo}. ${datosFormulario.descripcion}`,
+      medio: datosFormulario.medios
+    };
 
-      // Redirige después de 2 segundos
-      setTimeout(() => {
-        console.log('Redirigiendo a /mis-asesorias...');
-        // Descomentar si existe esa ruta:
-        // this.router.navigate(['/mis-asesorias']);
-      }, 2000);
-    }, 1500);
+    console.log('📤 DTO enviado al backend:', dto);
+
+    this.asesoriaService.crearAsesoria(dto).subscribe({
+      next: (respuesta) => {
+        console.log('✅ Asesoría creada:', respuesta);
+        this.mostrarMensajeExito = true;
+        this.mensajeExito = respuesta.mensaje || 'Asesoría agendada exitosamente.';
+        this.formularioAgendar.reset();
+        this.asesores = [];
+        this.enviando = false;
+        this.cdr.detectChanges();
+
+        setTimeout(() => {
+          this.router.navigate(['/mis-asesorias']);
+        }, 1500);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('❌ Error al crear asesoría:', error);
+        this.enviando = false;
+        this.mensajeError = error.error?.mensaje || 'No fue posible agendar la asesoría.';
+        this.cdr.detectChanges();
+      }
+    });
   }
 
-  /**
-   * Limpia el formulario
-   */
   public limpiarFormulario() {
     this.formularioAgendar.reset();
+    this.asesores = [];
     this.mensajeError = '';
     this.mostrarMensajeExito = false;
+    this.mensajeExito = '';
   }
 
-  /**
-   * Vuelve a la página anterior
-   */
   public volver() {
     window.history.back();
   }
 
-  /**
-   * Getters para validación de campos en el template
-   */
-  get tieneError(): boolean {
-    return this.formularioAgendar.invalid && this.formularioAgendar.touched;
+  get campoTemaError(): boolean {
+    const control = this.formularioAgendar.get('tema');
+    return !!(control && control.invalid && control.touched);
   }
 
   get campoAsesorError(): boolean {
-    return this.formularioAgendar.get('asesor')?.invalid ?? false;
+    const control = this.formularioAgendar.get('asesor');
+    return !!(control && control.invalid && control.touched);
   }
 
   get campoTituloError(): boolean {
-    return this.formularioAgendar.get('titulo')?.invalid ?? false;
+    const control = this.formularioAgendar.get('titulo');
+    return !!(control && control.invalid && control.touched);
   }
 
   get campoDescripcionError(): boolean {
-    return this.formularioAgendar.get('descripcion')?.invalid ?? false;
+    const control = this.formularioAgendar.get('descripcion');
+    return !!(control && control.invalid && control.touched);
   }
 
   get campoFechaError(): boolean {
-    return this.formularioAgendar.get('fecha')?.invalid ?? false;
+    const control = this.formularioAgendar.get('fecha');
+    return !!(control && control.invalid && control.touched);
   }
 
   get campoHoraError(): boolean {
-    return this.formularioAgendar.get('horaInicio')?.invalid ?? false;
+    const control = this.formularioAgendar.get('horaInicio');
+    return !!(control && control.invalid && control.touched);
   }
 
   get campoMediosError(): boolean {
-    return this.formularioAgendar.get('medios')?.invalid ?? false;
+    const control = this.formularioAgendar.get('medios');
+    return !!(control && control.invalid && control.touched);
   }
 }

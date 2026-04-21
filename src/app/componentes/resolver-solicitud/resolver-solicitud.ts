@@ -1,13 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
-/**
- * Componente para listar solicitudes de ayuda
- * Lista deslizable horizontal
- * Muestra: tema, urgencia, solicitanteNombre, descripcion, fecha
- * Usuario selecciona una y presiona Resolver
- */
+import { SolicitudAyudaService, AtenderSolicitudDTO } from '../../servicios/solicitud-ayuda';
+import { InformacionSolicitudAyudaDTO } from '../../dto/solicitud/informacion-solicitud-ayuda.dto';
+import { Token } from '../../servicios/token';
+import { EstadoSolicitud } from '../../dto/enums';
+
 @Component({
   selector: 'app-resolver-solicitud',
   standalone: true,
@@ -16,88 +16,114 @@ import { Router } from '@angular/router';
   styleUrls: ['./resolver-solicitud.css']
 })
 export class ResolverSolicitudComponent implements OnInit {
-  solicitudes: any[] = [];
+  solicitudes: InformacionSolicitudAyudaDTO[] = [];
   cargando = false;
+  procesando = false;
   solicitudSeleccionada: string | null = null;
-
-  // ✅ DATOS MOCK
-  solicitudesMock = [
-    {
-      id: 'SOL-001',
-      tema: 'MATEMÁTICA',
-      urgencia: 3,
-      solicitanteId: 'EST-101',
-      solicitanteNombre: 'Carlos García',
-      descripcion: 'Necesito ayuda con ecuaciones de segundo grado',
-      fechaSolicitud: new Date('2024-04-18')
-    },
-    {
-      id: 'SOL-002',
-      tema: 'LENGUAJE',
-      urgencia: 5,
-      solicitanteId: 'EST-102',
-      solicitanteNombre: 'María López',
-      descripcion: 'Ayuda urgente con análisis de textos literarios',
-      fechaSolicitud: new Date('2024-04-18')
-    },
-    {
-      id: 'SOL-003',
-      tema: 'PROGRAMACIÓN',
-      urgencia: 2,
-      solicitanteId: 'EST-103',
-      solicitanteNombre: 'Juan Pérez',
-      descripcion: 'Consulta sobre estructuras de datos en JavaScript',
-      fechaSolicitud: new Date('2024-04-17')
-    },
-    {
-      id: 'SOL-004',
-      tema: 'INGLÉS',
-      urgencia: 4,
-      solicitanteId: 'EST-104',
-      solicitanteNombre: 'Ana Martínez',
-      descripcion: 'Necesito mejorar mi pronunciación en inglés',
-      fechaSolicitud: new Date('2024-04-17')
-    },
-    {
-      id: 'SOL-005',
-      tema: 'CIENCIAS',
-      urgencia: 1,
-      solicitanteId: 'EST-105',
-      solicitanteNombre: 'Pedro Rodríguez',
-      descripcion: 'Duda sobre el ciclo del agua en la naturaleza',
-      fechaSolicitud: new Date('2024-04-16')
-    }
-  ];
+  mensajeError = '';
+  mensajeExito = '';
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private solicitudAyudaService: SolicitudAyudaService,
+    private tokenService: Token
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.cargarSolicitudes();
   }
 
-  private cargarSolicitudes() {
+  private cargarSolicitudes(): void {
     this.cargando = true;
+    this.mensajeError = '';
+    this.mensajeExito = '';
     this.cdr.detectChanges();
 
-    setTimeout(() => {
-      this.solicitudes = [...this.solicitudesMock];
-      this.cargando = false;
-      this.cdr.detectChanges();
-    }, 500);
+    this.solicitudAyudaService.obtenerActivas().subscribe({
+      next: (resp) => {
+        console.log('📥 RESPUESTA COMPLETA:', resp);
+        console.log('📦 ARRAY DATOS:', resp?.datos);
+        console.log('📌 ¿Es array?', Array.isArray(resp?.datos));
+
+        this.solicitudes = Array.isArray(resp?.datos) ? resp.datos : [];
+
+        console.log('✅ SOLICITUDES CARGADAS EN EL COMPONENTE:', this.solicitudes);
+
+        this.solicitudes.sort((a, b) =>
+          new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime()
+        );
+
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('❌ Error al cargar solicitudes:', error);
+        this.cargando = false;
+        this.mensajeError =
+          error.error?.mensaje ||
+          error.error?.respuesta ||
+          'No fue posible cargar las solicitudes.';
+        this.cdr.detectChanges();
+      }
+    });
   }
 
-  public seleccionar(solicitudId: string) {
+  private obtenerMentorId(): string | null {
+    const data = this.tokenService.verTokenDecodificado();
+    console.log('🔐 Token decodificado:', data);
+    return data?.id || data?._id || data?.userId || null;
+  }
+
+  public seleccionar(solicitudId: string): void {
+    if (this.procesando) return;
     this.solicitudSeleccionada = this.solicitudSeleccionada === solicitudId ? null : solicitudId;
   }
 
-  public resolver() {
+  public resolver(): void {
     if (!this.solicitudSeleccionada) return;
-    
-    console.log('Resolviendo solicitud:', this.solicitudSeleccionada);
-    this.router.navigate(['/resolver-solicitud', this.solicitudSeleccionada]);
+
+    const mentorId = this.obtenerMentorId();
+
+    if (!mentorId) {
+      this.mensajeError = 'No fue posible identificar el mentor autenticado.';
+      return;
+    }
+
+    this.procesando = true;
+    this.mensajeError = '';
+    this.mensajeExito = '';
+
+    const dto: AtenderSolicitudDTO = {
+      solicitudId: this.solicitudSeleccionada,
+      mentorId
+    };
+
+    console.log('📤 DTO ATENDER SOLICITUD:', dto);
+
+    this.solicitudAyudaService.atenderSolicitud(dto).subscribe({
+      next: (resp) => {
+        console.log('✅ RESPUESTA ATENDER SOLICITUD:', resp);
+
+        this.mensajeExito = resp.mensaje || 'Solicitud tomada correctamente.';
+        const id = this.solicitudSeleccionada;
+
+        this.procesando = false;
+        this.solicitudSeleccionada = null;
+        this.cdr.detectChanges();
+
+        this.router.navigate(['/resolver-solicitud', id]);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('❌ Error al atender solicitud:', error);
+        this.procesando = false;
+        this.mensajeError =
+          error.error?.mensaje ||
+          error.error?.respuesta ||
+          'No fue posible tomar la solicitud.';
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   public getColorUrgencia(urgencia: number): string {
@@ -112,12 +138,19 @@ export class ResolverSolicitudComponent implements OnInit {
     return 'fa-info-circle';
   }
 
-  public formatearFecha(fecha: Date): string {
+  public formatearFecha(fecha: string): string {
     return new Date(fecha).toLocaleDateString('es-CO', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     });
+  }
+
+  public formatearTema(tema: string): string {
+    return tema
+      .toLowerCase()
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, letra => letra.toUpperCase());
   }
 
   public estaSeleccionada(solicitudId: string): boolean {

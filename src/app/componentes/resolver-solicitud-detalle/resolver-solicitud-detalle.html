@@ -1,0 +1,211 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+      <h1 class="titulo-principal mb-1">Resolver solicitud</h1>
+      <p class="subtitulo mb-0">
+        Agrega texto, archivos o contenido académico para responder la solicitud.
+      </p>
+    </div>
+  </div>
+
+  @if (mensajeError) {
+    <div class="alert alert-danger mb-4">
+      {{ mensajeError }}
+    </div>
+  }
+
+  @if (mensajeExito) {
+    <div class="alert alert-success mb-4">
+      {{ mensajeExito }}
+    </div>
+  }
+
+  @if (cargandoSolicitud) {
+    <div class="text-center mt-5">
+      <div class="spinner-border text-primary"></div>
+      <p class="text-muted mt-3">Cargando solicitud...</p>
+    </div>
+  }
+
+  @if (solicitud && !cargandoSolicitud) {
+    <div class="card panel-card mb-4">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between flex-wrap gap-3">
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+              <span class="badge badge-tema">{{ formatearTema(solicitud.tema) }}</span>
+              <span [class]="obtenerClaseEstado(solicitud.estado)">
+                {{ obtenerTextoEstado(solicitud.estado) }}
+              </span>
+            </div>
+
+            <h5 class="titulo-bloque mb-3">Información de la solicitud</h5>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Solicitante</span>
+                <span class="info-value">{{ solicitud.nombreSolicitante || solicitud.solicitanteId }}</span>
+              </div>
+
+              <div class="info-item">
+                <span class="info-label">Urgencia</span>
+                <span class="info-value">{{ solicitud.urgencia }}/5</span>
+              </div>
+
+              <div class="info-item">
+                <span class="info-label">Fecha</span>
+                <span class="info-value">{{ formatearFecha(solicitud.fechaCreacion) }}</span>
+              </div>
+            </div>
+
+            <div class="descripcion-box mt-3">
+              <span class="info-label d-block mb-1">Descripción</span>
+              <p class="descripcion mb-0">{{ solicitud.descripcion }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="card panel-card mb-4">
+    <div class="card-body p-4">
+      <h5 class="titulo-bloque mb-3">Agregar respuesta</h5>
+
+      <form [formGroup]="formulario" (ngSubmit)="guardarRespuesta()">
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label">Comentario corto</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="comentario"
+              placeholder="Comentario opcional">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Texto de respuesta</label>
+            <textarea
+              rows="5"
+              class="form-control"
+              formControlName="textoRespuesta"
+              placeholder="Escribe la solución aquí..."
+              [class.is-invalid]="campoTextoRespuesta?.invalid && campoTextoRespuesta?.touched"></textarea>
+
+            @if (campoTextoRespuesta?.invalid && campoTextoRespuesta?.touched) {
+              <div class="invalid-feedback d-block">
+                El texto de respuesta es obligatorio y debe tener mínimo 5 caracteres.
+              </div>
+            }
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Adjuntar archivo</label>
+            <input
+              type="file"
+              class="form-control"
+              (change)="seleccionarArchivo($event)">
+
+            @if (archivoSeleccionado) {
+              <small class="text-muted">{{ archivoSeleccionado.name }}</small>
+            }
+          </div>
+
+          <div class="col-12">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                formControlName="esRespuestaFinal"
+                id="esRespuestaFinal">
+              <label class="form-check-label" for="esRespuestaFinal">
+                Marcar esta respuesta como final
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2 flex-wrap">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="guardandoRespuesta || subiendoAdjunto">
+            {{ guardandoRespuesta ? 'Guardando...' : 'Guardar respuesta' }}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-light"
+            [disabled]="subiendoAdjunto">
+            {{ subiendoAdjunto ? 'Subiendo archivo...' : 'Adjuntar soporte' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card panel-card">
+    <div class="card-body p-4">
+      <h5 class="titulo-bloque mb-3">Historial de respuestas</h5>
+
+      @if (cargandoRespuestas) {
+        <div class="text-muted">Cargando respuestas...</div>
+      }
+
+      @if (!cargandoRespuestas && respuestas.length === 0) {
+        <div class="text-muted">Aún no hay respuestas registradas para esta solicitud.</div>
+      }
+
+      @if (!cargandoRespuestas && respuestas.length > 0) {
+        <div class="respuesta-item" *ngFor="let respuesta of respuestas">
+          <div class="respuesta-header">
+            <div>
+              <strong>{{ respuesta.autorNombre }}</strong>
+              <span class="fecha-respuesta ms-2">{{ formatearFecha(respuesta.fechaCreacion) }}</span>
+            </div>
+
+            @if (respuesta.esRespuestaFinal) {
+              <span class="badge badge-final">Respuesta final</span>
+            }
+          </div>
+
+          @if (respuesta.comentario) {
+            <div class="comentario-respuesta">
+              {{ respuesta.comentario }}
+            </div>
+          }
+
+          <div class="texto-respuesta">
+            {{ respuesta.textoRespuesta }}
+          </div>
+
+          @if (respuesta.adjuntos.length > 0) {
+            <div class="adjuntos mt-2">
+              <div class="adjunto-item" *ngFor="let adjunto of respuesta.adjuntos">
+                <button
+                  type="button"
+                  class="btn-link-adjunto"
+                  (click)="abrirAdjunto(adjunto.archivoId)">
+                  <i class="fa-solid fa-paperclip me-2"></i>
+                  {{ adjunto.nombreArchivo }}
+                </button>
+              </div>
+            </div>
+          }
+
+          @if (respuesta.contenidoAcademicoId) {
+            <div class="contenido-relacionado mt-2">
+              <button
+                type="button"
+                class="btn-link-adjunto"
+                (click)="abrirContenidoRelacionado(respuesta.contenidoAcademicoId!)">
+                <i class="fa-solid fa-file-lines me-2"></i>
+                Ver contenido relacionado: {{ respuesta.contenidoAcademicoId }}
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="container py-4">
+  <div class="encabezado mb-4">
+    <h1 class="titulo-principal mb-1">Mis asesorías</h1>
+    <p class="subtitulo mb-0">
+      Aquí puedes consultar el historial de asesorías que has solicitado.
+    </p>
+  </div>
+
+  <div *ngIf="cargando" class="card panel-card">
+    <div class="card-body text-center py-5">
+      <div class="spinner-border text-primary mb-3" role="status" aria-hidden="true"></div>
+      <p class="texto-carga mb-0">Cargando tus asesorías...</p>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando && mensajeError" class="alert alert-danger" role="alert">
+    {{ mensajeError }}
+  </div>
+
+  <div *ngIf="!cargando && !mensajeError && asesorias.length === 0" class="card panel-card">
+    <div class="card-body text-center py-5">
+      <h5 class="mb-2">Aún no has solicitado asesorías</h5>
+      <p class="text-muted mb-0">
+        Cuando agendes una asesoría, aparecerá listada aquí.
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando && !mensajeError && asesorias.length > 0" class="row g-3">
+    <div class="col-12" *ngFor="let asesoria of asesorias; trackBy: trackByAsesoria">
+      <div class="card panel-card asesoria-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+                <h5 class="mb-0 titulo-card">{{ asesoria.tema }}</h5>
+                <span [class]="obtenerClaseEstado(asesoria.estado)">
+                  {{ obtenerTextoEstado(asesoria.estado) }}
+                </span>
+              </div>
+
+              <div class="datos-grid">
+                <div class="dato-item">
+                  <span class="dato-label">Fecha y hora</span>
+                  <span class="dato-valor">{{ formatearFecha(asesoria.fechaHora) }}</span>
+                </div>
+
+                <div class="dato-item">
+                  <span class="dato-label">Medio</span>
+                  <span class="dato-valor">{{ asesoria.medio }}</span>
+                </div>
+
+                <div class="dato-item">
+                  <span class="dato-label">Asesor</span>
+                  <span class="dato-valor">
+                    {{ asesoria.nombreAsesor   }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="descripcion-box mt-3">
+                <span class="dato-label d-block mb-1">Descripción</span>
+                <p class="descripcion mb-0">
+                  {{ asesoria.descripcion || 'Sin descripción registrada.' }}
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

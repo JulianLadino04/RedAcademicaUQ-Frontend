@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { ContenidosAcademicosService } from '../servicios/contenido-academico';
+import { ContenidosAcademicosService } from '../../servicios/contenido-academico';
 @Component({
   selector: 'app-subir-contenido-academico',
   standalone: true,

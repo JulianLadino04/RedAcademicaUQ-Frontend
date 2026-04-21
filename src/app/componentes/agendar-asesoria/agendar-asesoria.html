@@ -1,207 +1,204 @@
-<div class="container mt-4 mb-5">
-  <!-- Encabezado con título -->
-  <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
     <div>
-      <h2 class="mb-1 titulo-principal">
-        <i class="fa-solid fa-calendar-check me-2"></i>Agendar Asesoría
-      </h2>
-      <p class="text-muted mb-0 subtitulo">Solicita una asesoría con un profesor disponible</p>
+      <h1 class="titulo-principal mb-1">Agendar asesoría</h1>
+      <p class="subtitulo mb-0">
+        Selecciona el tema, el mentor disponible y completa los datos de tu solicitud.
+      </p>
     </div>
+
+    <button
+      type="button"
+      class="btn btn-link text-decoration-none p-0"
+      (click)="volver()">
+      <i class="bi bi-arrow-left me-1"></i> Volver
+    </button>
   </div>
 
-  <!-- Mensaje de éxito -->
-  <div *ngIf="mostrarMensajeExito" class="alert alert-success alert-dismissible fade show" role="alert">
-    <i class="fa-solid fa-check-circle me-2"></i>
-    <strong>¡Asesoría agendada exitosamente!</strong> 
-    Serás redirigido a tus asesorías en unos momentos.
-    <button type="button" class="btn-close" (click)="mostrarMensajeExito = false"></button>
-  </div>
-
-  <!-- Mensaje de error -->
-  <div *ngIf="mensajeError" class="alert alert-danger alert-dismissible fade show" role="alert">
-    <i class="fa-solid fa-exclamation-circle me-2"></i>
-    <strong>Error:</strong> {{ mensajeError }}
-    <button type="button" class="btn-close" (click)="mensajeError = ''"></button>
-  </div>
-
-  <!-- Formulario en card -->
   <div class="card filtro-card">
-    <div class="card-body">
+    <div class="card-body p-4 p-md-5">
       <form [formGroup]="formularioAgendar" (ngSubmit)="agendar()">
-        <!-- Grid de formulario -->
         <div class="row g-3">
 
-          <!-- Campo: Asesor -->
+          <!-- Tema -->
           <div class="col-md-6">
-            <label for="asesor" class="form-label">
-              <i class="fa-solid fa-user-tie me-1"></i>Asesor
+            <label class="form-label">
+              <i class="bi bi-tags me-1"></i> Tema
             </label>
-            <select 
-              id="asesor"
+            <select
               class="form-select"
-              [class.is-invalid]="campoAsesorError && formularioAgendar.get('asesor')?.touched"
-              formControlName="asesor"
-              [disabled]="cargando">
-              <option value="" disabled selected>Selecciona un asesor</option>
-              <option *ngFor="let asesor of asesores" [value]="asesor.id">
-                {{ asesor.nombre }}
+              formControlName="tema"
+              (change)="cargarMentoresPorTema()"
+              [class.is-invalid]="campoTemaError">
+              <option value="">Selecciona un tema</option>
+              <option *ngFor="let tema of temas" [value]="tema">
+                {{ tema }}
               </option>
             </select>
-            <div class="invalid-feedback" *ngIf="campoAsesorError && formularioAgendar.get('asesor')?.touched">
-              Debes seleccionar un asesor
+            <div class="invalid-feedback" *ngIf="campoTemaError">
+              Debes seleccionar un tema.
             </div>
-          </div>
-
-          <!-- Campo: Título -->
-          <div class="col-md-6">
-            <label for="titulo" class="form-label">
-              <i class="fa-solid fa-heading me-1"></i>Título
-            </label>
-            <input 
-              type="text"
-              id="titulo"
-              class="form-control"
-              [class.is-invalid]="campoTituloError && formularioAgendar.get('titulo')?.touched"
-              placeholder="Tema de la asesoría"
-              formControlName="titulo">
-            <div class="invalid-feedback" *ngIf="formularioAgendar.get('titulo')?.hasError('required') && formularioAgendar.get('titulo')?.touched">
-              El título es requerido
-            </div>
-            <div class="invalid-feedback" *ngIf="formularioAgendar.get('titulo')?.hasError('minlength') && formularioAgendar.get('titulo')?.touched">
-              El título debe tener al menos 5 caracteres
-            </div>
-          </div>
-
-          <!-- Campo: Descripción (ancho completo) -->
-          <div class="col-12">
-            <label for="descripcion" class="form-label">
-              <i class="fa-solid fa-align-left me-1"></i>Descripción
-            </label>
-            <textarea 
-              id="descripcion"
-              class="form-control"
-              [class.is-invalid]="campoDescripcionError && formularioAgendar.get('descripcion')?.touched"
-              placeholder="Describe con detalle qué necesitas ayuda"
-              rows="4"
-              formControlName="descripcion"></textarea>
-            <div class="invalid-feedback" *ngIf="formularioAgendar.get('descripcion')?.hasError('required') && formularioAgendar.get('descripcion')?.touched">
-              La descripción es requerida
-            </div>
-            <div class="invalid-feedback" *ngIf="formularioAgendar.get('descripcion')?.hasError('minlength') && formularioAgendar.get('descripcion')?.touched">
-              La descripción debe tener al menos 10 caracteres
-            </div>
-            <small class="text-muted d-block mt-1">
-              <i class="fa-solid fa-info-circle me-1"></i>
-              Mínimo 10 caracteres
+            <small class="text-muted">
+              <i class="bi bi-info-circle me-1"></i>
+              Elige el área académica para mostrar los mentores relacionados.
             </small>
           </div>
 
-          <!-- Campo: Fecha -->
+          <!-- Mentor -->
           <div class="col-md-6">
-            <label for="fecha" class="form-label">
-              <i class="fa-solid fa-calendar-days me-1"></i>Fecha
+            <label class="form-label">
+              <i class="bi bi-person-badge me-1"></i> Asesor / Mentor
             </label>
-            <input 
-              type="date"
-              id="fecha"
-              class="form-control"
-              [class.is-invalid]="campoFechaError && formularioAgendar.get('fecha')?.touched"
-              formControlName="fecha">
-            <div class="invalid-feedback" *ngIf="campoFechaError && formularioAgendar.get('fecha')?.touched">
-              Debes seleccionar una fecha
-            </div>
-            <small class="text-muted d-block mt-1">
-              <i class="fa-solid fa-info-circle me-1"></i>
-              Selecciona una fecha futura
-            </small>
-          </div>
-
-          <!-- Campo: Hora de Inicio -->
-          <div class="col-md-6">
-            <label for="horaInicio" class="form-label">
-              <i class="fa-solid fa-clock me-1"></i>Hora Inicio
-            </label>
-            <input 
-              type="time"
-              id="horaInicio"
-              class="form-control"
-              [class.is-invalid]="campoHoraError && formularioAgendar.get('horaInicio')?.touched"
-              formControlName="horaInicio">
-            <div class="invalid-feedback" *ngIf="campoHoraError && formularioAgendar.get('horaInicio')?.touched">
-              Debes seleccionar una hora válida
-            </div>
-            <small class="text-muted d-block mt-1">
-              <i class="fa-solid fa-info-circle me-1"></i>
-              Mínimo una hora desde ahora
-            </small>
-          </div>
-
-          <!-- Campo: Medios -->
-          <div class="col-md-6">
-            <label for="medios" class="form-label">
-              <i class="fa-solid fa-video me-1"></i>Medios
-            </label>
-            <select 
-              id="medios"
+            <select
               class="form-select"
-              [class.is-invalid]="campoMediosError && formularioAgendar.get('medios')?.touched"
-              formControlName="medios">
-              <option value="" disabled selected>Selecciona un medio</option>
+              formControlName="asesor"
+              [class.is-invalid]="campoAsesorError">
+              <option value="">Selecciona un mentor</option>
+              <option *ngFor="let asesor of asesores" [value]="asesor.id">
+                {{ asesor.nombre }} - {{ asesor.especialidad }}
+              </option>
+            </select>
+
+            <small class="text-muted" *ngIf="cargandoMentores">
+              <i class="bi bi-arrow-repeat me-1"></i>
+              Cargando mentores disponibles...
+            </small>
+
+            <div class="invalid-feedback" *ngIf="campoAsesorError">
+              Debes seleccionar un mentor.
+            </div>
+          </div>
+
+          <!-- Título -->
+          <div class="col-md-6">
+            <label class="form-label">
+              <i class="bi bi-card-text me-1"></i> Título de la asesoría
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="titulo"
+              placeholder="Ej. Apoyo en ecuaciones lineales"
+              [class.is-invalid]="campoTituloError" />
+            <div class="invalid-feedback" *ngIf="campoTituloError">
+              El título es obligatorio y debe tener mínimo 5 caracteres.
+            </div>
+          </div>
+
+          <!-- Medio -->
+          <div class="col-md-6">
+            <label class="form-label">
+              <i class="bi bi-camera-video me-1"></i> Medio de atención
+            </label>
+            <select
+              class="form-select"
+              formControlName="medios"
+              [class.is-invalid]="campoMediosError">
+              <option value="">Selecciona un medio</option>
               <option *ngFor="let medio of medios" [value]="medio">
                 {{ medio }}
               </option>
             </select>
-            <div class="invalid-feedback" *ngIf="campoMediosError && formularioAgendar.get('medios')?.touched">
-              Debes seleccionar un medio
+            <div class="invalid-feedback" *ngIf="campoMediosError">
+              Debes seleccionar un medio.
+            </div>
+          </div>
+
+          <!-- Fecha -->
+          <div class="col-md-6">
+            <label class="form-label">
+              <i class="bi bi-calendar-event me-1"></i> Fecha
+            </label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="fecha"
+              [class.is-invalid]="campoFechaError" />
+            <div class="invalid-feedback" *ngIf="campoFechaError">
+              Debes seleccionar una fecha.
+            </div>
+          </div>
+
+          <!-- Hora -->
+          <div class="col-md-6">
+            <label class="form-label">
+              <i class="bi bi-clock me-1"></i> Hora de inicio
+            </label>
+            <input
+              type="time"
+              class="form-control"
+              formControlName="horaInicio"
+              [min]="horaMinima"
+              [class.is-invalid]="campoHoraError" />
+            <div class="invalid-feedback" *ngIf="campoHoraError">
+              Debes seleccionar una hora válida.
+            </div>
+            <small class="text-muted">
+              <i class="bi bi-info-circle me-1"></i>
+              Selecciona una hora posterior a la actual.
+            </small>
+          </div>
+
+          <!-- Descripción -->
+          <div class="col-12">
+            <label class="form-label">
+              <i class="bi bi-pencil-square me-1"></i> Descripción
+            </label>
+            <textarea
+              class="form-control"
+              formControlName="descripcion"
+              rows="5"
+              placeholder="Describe brevemente en qué necesitas apoyo..."
+              [class.is-invalid]="campoDescripcionError"></textarea>
+            <div class="invalid-feedback" *ngIf="campoDescripcionError">
+              La descripción es obligatoria y debe tener mínimo 10 caracteres.
             </div>
           </div>
 
         </div>
 
-        <!-- Botones de acción -->
-        <div class="row g-2 mt-4">
-          <div class="col-md-3">
-            <button 
-              type="submit" 
-              class="btn btn-primary w-100"
-              [disabled]="enviando || cargando">
-              <span *ngIf="!enviando">
-                <i class="fa-solid fa-check me-1"></i>Agendar
-              </span>
-              <span *ngIf="enviando">
-                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Agendando...
-              </span>
-            </button>
-          </div>
-          <div class="col-md-3">
-            <button 
-              type="button" 
-              class="btn btn-light border w-100"
-              (click)="limpiarFormulario()">
-              <i class="fa-solid fa-eraser me-1"></i>Limpiar
-            </button>
-          </div>
-          <div class="col-md-6 d-flex align-items-center">
-            <button 
-              type="button" 
-              class="btn btn-link text-decoration-none"
-              (click)="volver()">
-              <i class="fa-solid fa-arrow-left me-1"></i>Volver
-            </button>
+        <!-- Mensajes -->
+        <div class="mt-4" *ngIf="mensajeError">
+          <div class="alert alert-danger mb-0" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ mensajeError }}
           </div>
         </div>
 
+        <div class="mt-4" *ngIf="mostrarMensajeExito">
+          <div class="alert alert-success mb-0" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            {{ mensajeExito || 'La asesoría fue agendada exitosamente.' }}
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="row g-2 mt-4">
+          <div class="col-md-3">
+            <button
+              type="submit"
+              class="btn btn-primary w-100"
+              [disabled]="enviando">
+              <span
+                *ngIf="enviando"
+                class="spinner-border spinner-border-sm me-2"
+                role="status"
+                aria-hidden="true"></span>
+              {{ enviando ? 'Agendando...' : 'Agendar asesoría' }}
+            </button>
+          </div>
+
+          <div class="col-md-3">
+            <button
+              type="button"
+              class="btn btn-light w-100"
+              (click)="limpiarFormulario()"
+              [disabled]="enviando">
+              <i class="bi bi-eraser me-1"></i> Limpiar
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   </div>
-
-  <!-- Loading spinner mientras carga asesores -->
-  <div *ngIf="cargando" class="text-center mt-5">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
-    <p class="text-muted mt-3">Cargando asesores disponibles...</p>
-  </div>
-
 </div>

@@ -1,8 +1,8 @@
-import { Tema } from '../enums'
+import { Tema } from '../enums';
 
 export interface CrearSolicitudAyudaDTO {
-  tema: Tema
-  urgencia: number
-  solicitanteId: string
-  descripcion: string
+  tema: Tema;
+  urgencia: number;
+  solicitanteId: string;
+  descripcion: string;
 }

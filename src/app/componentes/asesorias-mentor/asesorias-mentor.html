@@ -1,0 +1,171 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+      <h1 class="titulo-principal mb-1">Gestión de asesorías</h1>
+      <p class="subtitulo mb-0">
+        Consulta y administra las asesorías solicitadas a tu perfil de mentor.
+      </p>
+    </div>
+  </div>
+
+  <div class="card panel-card mb-4">
+    <div class="card-body">
+      <div class="d-flex flex-wrap gap-2">
+        <button
+          type="button"
+          class="btn"
+          [ngClass]="filtroEstado === 'TODAS' ? 'btn-primary' : 'btn-light'"
+          (click)="cambiarFiltro('TODAS')">
+          Todas
+        </button>
+
+        <button
+          type="button"
+          class="btn"
+          [ngClass]="filtroEstado === EstadoAsesoria.PENDIENTE ? 'btn-primary' : 'btn-light'"
+          (click)="cambiarFiltro(EstadoAsesoria.PENDIENTE)">
+          Pendientes
+        </button>
+
+        <button
+          type="button"
+          class="btn"
+          [ngClass]="filtroEstado === EstadoAsesoria.ACEPTADA ? 'btn-primary' : 'btn-light'"
+          (click)="cambiarFiltro(EstadoAsesoria.ACEPTADA)">
+          Aceptadas
+        </button>
+
+        <button
+          type="button"
+          class="btn"
+          [ngClass]="filtroEstado === EstadoAsesoria.RECHAZADA ? 'btn-primary' : 'btn-light'"
+          (click)="cambiarFiltro(EstadoAsesoria.RECHAZADA)">
+          Rechazadas
+        </button>
+
+        <button
+          type="button"
+          class="btn"
+          [ngClass]="filtroEstado === EstadoAsesoria.FINALIZADA ? 'btn-primary' : 'btn-light'"
+          (click)="cambiarFiltro(EstadoAsesoria.FINALIZADA)">
+          Finalizadas
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="mensajeError" class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    {{ mensajeError }}
+  </div>
+
+  <div *ngIf="mensajeExito" class="alert alert-success" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    {{ mensajeExito }}
+  </div>
+
+  <div *ngIf="cargando" class="card panel-card">
+    <div class="card-body text-center py-5">
+      <div class="spinner-border text-primary mb-3" role="status" aria-hidden="true"></div>
+      <p class="texto-carga mb-0">Cargando asesorías...</p>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando && asesoriasFiltradas.length === 0 && !mensajeError" class="card panel-card">
+    <div class="card-body text-center py-5">
+      <i class="bi bi-journal-x icono-vacio mb-3"></i>
+      <h5 class="mb-2">No hay asesorías para mostrar</h5>
+      <p class="text-muted mb-0">
+        Cuando recibas solicitudes, aparecerán listadas aquí.
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando && asesoriasFiltradas.length > 0" class="row g-3">
+    <div class="col-12" *ngFor="let asesoria of asesoriasFiltradas; trackBy: trackByAsesoria">
+      <div class="card panel-card asesoria-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+                <h5 class="mb-0 titulo-card">{{ asesoria.tema }}</h5>
+                <span [class]="obtenerClaseEstado(asesoria.estado)">
+                  {{ obtenerTextoEstado(asesoria.estado) }}
+                </span>
+              </div>
+
+              <div class="datos-grid">
+                <div class="dato-item">
+                  <span class="dato-label">
+                    <i class="bi bi-person me-1"></i> Estudiante
+                  </span>
+                  <span class="dato-valor">
+                    {{ asesoria.nombreSolicitante || asesoria.solicitanteId }}
+                  </span>
+                </div>
+
+                <div class="dato-item">
+                  <span class="dato-label">
+                    <i class="bi bi-calendar-event me-1"></i> Fecha y hora
+                  </span>
+                  <span class="dato-valor">{{ formatearFecha(asesoria.fechaHora) }}</span>
+                </div>
+
+                <div class="dato-item">
+                  <span class="dato-label">
+                    <i class="bi bi-camera-video me-1"></i> Medio
+                  </span>
+                  <span class="dato-valor">{{ asesoria.medio }}</span>
+                </div>
+
+                <div class="dato-item">
+                  <span class="dato-label">
+                    <i class="bi bi-person-badge me-1"></i> Mentor
+                  </span>
+                  <span class="dato-valor">
+                    {{ asesoria.nombreAsesor || asesoria.asesorId }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="descripcion-box mt-3">
+                <span class="dato-label d-block mb-1">
+                  <i class="bi bi-card-text me-1"></i> Descripción
+                </span>
+                <p class="descripcion mb-0">
+                  {{ asesoria.descripcion || 'Sin descripción registrada.' }}
+                </p>
+              </div>
+
+              <div class="acciones mt-3 d-flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  [disabled]="procesandoEstado || !puedeAceptar(asesoria.estado)"
+                  (click)="actualizarEstado(asesoria, EstadoAsesoria.ACEPTADA)">
+                  Aceptar
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  [disabled]="procesandoEstado || !puedeRechazar(asesoria.estado)"
+                  (click)="actualizarEstado(asesoria, EstadoAsesoria.RECHAZADA)">
+                  Rechazar
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [disabled]="procesandoEstado || !puedeFinalizar(asesoria.estado)"
+                  (click)="actualizarEstado(asesoria, EstadoAsesoria.FINALIZADA)">
+                  Finalizar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,324 @@
+/* ============================================
+   ESTILOS - MIS ASESORÍAS
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600&display=swap');
+
+:host {
+  display: block;
+
+  --accent: #1a56a0;
+  --accent-dark: #123f78;
+  --accent-soft: #eaf2fd;
+  --accent-soft-2: #f5f9ff;
+  --accent-border: #cfe0f8;
+
+  --success-soft: #eefaf2;
+  --success-text: #1f6b3b;
+
+  --warning-soft: #fff7ed;
+  --warning-text: #c2410c;
+
+  --danger-soft: #fef2f2;
+  --danger-text: #b91c1c;
+
+  --info-soft: #eff6ff;
+  --info-text: #1d4ed8;
+
+  --surface: #ffffff;
+  --surface-2: #f8fbff;
+  --page-bg: #f3f7fc;
+
+  --text-primary: #172033;
+  --text-secondary: #5f6b85;
+  --text-muted: #8a94a8;
+
+  --border: #dbe4f0;
+  --border-strong: #c6d3e3;
+  --border-soft: #ebf1f7;
+
+  --shadow-xs: 0 2px 8px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 8px 22px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 14px 34px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 42px rgba(15, 23, 42, 0.12);
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 26px;
+
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.container.py-4 {
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(180deg, #f8fbff 0%, #f3f7fc 100%);
+  border-radius: var(--radius-xl);
+}
+
+/* ===== ENCABEZADO ===== */
+.encabezado {
+  padding: 0.25rem 0 0.5rem;
+}
+
+.titulo-principal {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 2rem;
+  line-height: 1.1;
+  margin-bottom: 0.45rem;
+}
+
+.subtitulo {
+  font-size: 0.96rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  max-width: 680px;
+}
+
+/* ===== TARJETAS GENERALES ===== */
+.panel-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+.panel-card::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--accent) 0%, #4a87d5 60%, #a5c9f6 100%);
+}
+
+.panel-card .card-body {
+  padding: 1.35rem 1.4rem;
+}
+
+/* ===== CARD DE ASESORÍA ===== */
+.asesoria-card {
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    border-color var(--transition);
+}
+
+.asesoria-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-border);
+}
+
+.titulo-card {
+  font-weight: 700;
+  font-size: 1.08rem;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+/* ===== GRID DE DATOS ===== */
+.datos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(180deg, #f8fbff 0%, #f4f8fe 100%);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+}
+
+.dato-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.dato-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dato-valor {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+/* ===== DESCRIPCIÓN ===== */
+.descripcion-box {
+  background: linear-gradient(180deg, #f9fbff 0%, #f4f8fe 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.05rem;
+  margin-top: 1rem !important;
+}
+
+.descripcion {
+  color: #334155;
+  line-height: 1.65;
+  font-size: 0.93rem;
+}
+
+/* ===== ESTADOS ===== */
+.estado,
+.estado-pendiente,
+.estado-aceptada,
+.estado-rechazada,
+.estado-finalizada {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.42rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border: 1px solid transparent;
+  box-shadow: var(--shadow-xs);
+}
+
+.estado-pendiente {
+  background: var(--warning-soft);
+  color: var(--warning-text);
+  border-color: #fed7aa;
+}
+
+.estado-aceptada {
+  background: var(--info-soft);
+  color: var(--info-text);
+  border-color: #bfdbfe;
+}
+
+.estado-rechazada {
+  background: var(--danger-soft);
+  color: var(--danger-text);
+  border-color: #fecaca;
+}
+
+.estado-finalizada {
+  background: var(--success-soft);
+  color: var(--success-text);
+  border-color: #bbf7d0;
+}
+
+/* ===== ALERTAS ===== */
+.alert {
+  border: none;
+  border-radius: var(--radius-md);
+  border-left: 4px solid;
+  padding: 1rem 1rem;
+  font-size: 0.92rem;
+  box-shadow: var(--shadow-sm);
+  animation: fadeIn 0.35s ease;
+}
+
+.alert-danger {
+  background-color: var(--danger-soft);
+  color: #991b1b;
+  border-left-color: #dc2626;
+}
+
+/* ===== LOADING / VACÍO ===== */
+.texto-carga {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.panel-card h5 {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.panel-card .text-muted {
+  color: var(--text-secondary) !important;
+}
+
+/* ===== SPINNER ===== */
+.spinner-border.text-primary {
+  color: var(--accent) !important;
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.35s ease;
+}
+
+/* ===== SEPARACIÓN ENTRE TARJETAS ===== */
+.row.g-3 {
+  --bs-gutter-y: 1rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 991px) {
+  .datos-grid {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .titulo-principal {
+    font-size: 1.6rem;
+  }
+
+  .subtitulo {
+    font-size: 0.9rem;
+  }
+
+  .panel-card .card-body {
+    padding: 1rem;
+  }
+
+  .datos-grid {
+    grid-template-columns: 1fr;
+    padding: 0.9rem;
+  }
+
+  .titulo-card {
+    font-size: 1rem;
+  }
+
+  .descripcion {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .container.py-4 {
+    padding-left: 0.8rem !important;
+    padding-right: 0.8rem !important;
+  }
+
+  .titulo-principal {
+    font-size: 1.45rem;
+  }
+
+  .estado,
+  .estado-pendiente,
+  .estado-aceptada,
+  .estado-rechazada,
+  .estado-finalizada {
+    font-size: 0.74rem;
+    padding: 0.38rem 0.75rem;
+  }
+}

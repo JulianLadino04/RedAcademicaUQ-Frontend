@@ -1,0 +1,168 @@
+<div class="container py-4">
+  <h1 class="titulo-principal mb-1">Administración de mentores</h1>
+  <p class="subtitulo mb-4">Crea, edita y elimina mentores del sistema.</p>
+
+  <div class="card panel-card mb-4">
+    <div class="card-body p-4">
+      <form [formGroup]="formulario" (ngSubmit)="guardar()">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="nombre"
+              [class.is-invalid]="campoNombre?.invalid && campoNombre?.touched">
+
+            <div class="invalid-feedback" *ngIf="campoNombre?.errors?.['required']">
+              El nombre es obligatorio.
+            </div>
+            <div class="invalid-feedback" *ngIf="campoNombre?.errors?.['minlength']">
+              El nombre debe tener mínimo 3 caracteres.
+            </div>
+            <div class="invalid-feedback" *ngIf="campoNombre?.errors?.['maxlength']">
+              El nombre no puede superar 100 caracteres.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Correo</label>
+            <input
+              type="email"
+              class="form-control"
+              formControlName="email"
+              [class.is-invalid]="campoEmail?.invalid && campoEmail?.touched">
+
+            <div class="invalid-feedback" *ngIf="campoEmail?.errors?.['required']">
+              El correo es obligatorio.
+            </div>
+            <div class="invalid-feedback" *ngIf="campoEmail?.errors?.['email']">
+              Ingresa un correo válido.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Especialidad</label>
+            <select
+              class="form-select"
+              formControlName="especialidad"
+              [class.is-invalid]="campoEspecialidad?.invalid && campoEspecialidad?.touched">
+
+              <option value="">Seleccione una especialidad</option>
+
+              <option *ngFor="let esp of especialidades" [value]="esp">
+                {{ formatearEspecialidad(esp) }}
+              </option>
+            </select>
+
+            <div class="invalid-feedback" *ngIf="campoEspecialidad?.errors?.['required']">
+              La especialidad es obligatoria.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">
+              {{ editandoId ? 'Nueva contraseña (opcional)' : 'Contraseña' }}
+            </label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="password"
+              [class.is-invalid]="campoPassword?.invalid && campoPassword?.touched">
+
+            <div class="invalid-feedback" *ngIf="campoPassword?.errors?.['required']">
+              La contraseña es obligatoria.
+            </div>
+            <div class="invalid-feedback" *ngIf="campoPassword?.errors?.['minlength']">
+              La contraseña debe tener mínimo 6 caracteres.
+            </div>
+            <div class="invalid-feedback" *ngIf="campoPassword?.errors?.['maxlength']">
+              La contraseña no puede superar 20 caracteres.
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2 flex-wrap">
+          <button type="submit" class="btn btn-primary" [disabled]="guardando">
+            {{ guardando ? 'Guardando...' : (editandoId ? 'Actualizar mentor' : 'Crear mentor') }}
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-light"
+            *ngIf="editandoId"
+            (click)="cancelarEdicion()"
+            [disabled]="guardando">
+            Cancelar edición
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div *ngIf="mensajeError" class="alert alert-danger">
+    {{ mensajeError }}
+  </div>
+
+  <div *ngIf="mensajeExito" class="alert alert-success">
+    {{ mensajeExito }}
+  </div>
+
+  <div class="card panel-card">
+    <div class="card-body p-4">
+      <h5 class="mb-3">Listado de mentores</h5>
+
+      <div *ngIf="cargando" class="text-muted">
+        Cargando mentores...
+      </div>
+
+      <div class="table-responsive" *ngIf="!cargando">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Especialidad</th>
+              <th>Horarios</th>
+              <th>Asesorías</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let mentor of mentores">
+              <td>{{ mentor.nombre }}</td>
+              <td>{{ mentor.email }}</td>
+              <td>{{ formatearEspecialidad(mentor.especialidad) }}</td>
+              <td>{{ mentor.cantidadHorarios }}</td>
+              <td>{{ mentor.cantidadAsesorias }}</td>
+              <td>
+                <div class="d-flex gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-primary"
+                    (click)="editar(mentor)">
+                    Editar
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-danger"
+                    (click)="eliminar(mentor.id)"
+                    [disabled]="eliminandoId === mentor.id">
+                    {{ eliminandoId === mentor.id ? 'Eliminando...' : 'Eliminar' }}
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="mentores.length === 0">
+              <td colspan="6" class="text-center text-muted">
+                No hay mentores registrados.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

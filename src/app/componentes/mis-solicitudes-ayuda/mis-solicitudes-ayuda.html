@@ -1,0 +1,56 @@
+<div class="container py-4">
+  <div class="mb-4">
+    <h1 class="titulo-principal mb-1">Mis solicitudes de ayuda</h1>
+    <p class="subtitulo mb-0">Consulta el estado y las respuestas recibidas.</p>
+  </div>
+
+  @if (mensajeError) {
+    <div class="alert alert-danger mb-4">
+      {{ mensajeError }}
+    </div>
+  }
+
+  @if (cargando) {
+    <div class="text-center mt-5">
+      <div class="spinner-border text-primary"></div>
+      <p class="text-muted mt-3">Cargando solicitudes...</p>
+    </div>
+  }
+
+  @if (!cargando && solicitudes.length === 0) {
+    <div class="card panel-card">
+      <div class="card-body text-center py-5">
+        <p class="text-muted mb-0">Aún no has creado solicitudes.</p>
+      </div>
+    </div>
+  }
+
+  @if (!cargando && solicitudes.length > 0) {
+    <div class="row g-3">
+      <div class="col-12" *ngFor="let solicitud of solicitudes">
+        <div class="card panel-card solicitud-card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+              <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+                  <span class="badge badge-tema">{{ formatearTema(solicitud.tema) }}</span>
+                  <span [class]="obtenerClaseEstado(solicitud.estado)">
+                    {{ solicitud.estado }}
+                  </span>
+                </div>
+
+                <p class="mb-2 descripcion">{{ solicitud.descripcion }}</p>
+                <small class="text-muted">Urgencia: {{ solicitud.urgencia }}/5</small><br>
+                <small class="text-muted">Fecha: {{ formatearFecha(solicitud.fechaCreacion) }}</small>
+              </div>
+
+              <button class="btn btn-primary" (click)="verDetalle(solicitud.id)">
+                Ver detalle
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Token } from '../../servicios/token';
-import { PublicoService } from '../../servicios/publico';
 import { Auth } from '../../servicios/auth';
-import { obtenerNombreDTO } from '../../dto/cuenta/obtener-nombre';
-import { firstValueFrom } from 'rxjs';
+
+interface NavLink {
+  label: string;
+  route: string;
+  roles: string[];
+}
 
 @Component({
   selector: 'app-header',
@@ -15,45 +18,58 @@ import { firstValueFrom } from 'rxjs';
 })
 export class Header implements OnInit {
 
-  title: string = 'Red Academica UQ';
+  title: string = '';
   isLogged: boolean = false;
-  email: string = '';
   user: string = '';
+  rol: string = '';
+
+  readonly navLinks: NavLink[] = [
+    { label: 'Contenidos Académicos', route: '/contenidos-academicos', roles: ['ADMINISTRADOR', 'ESTUDIANTE'] },
+    { label: 'Subir Contenido', route: '/subir-contenido', roles: ['ASESOR', 'ADMINISTRADOR'] },
+    { label: 'Agendar Asesoría', route: '/agendar-asesoria', roles: ['ESTUDIANTE'] },
+    { label: 'Resolver Solicitud', route: '/resolver-solicitud', roles: ['ASESOR','ESTUDIANTE'] },
+    { label: 'Solicitar Ayuda', route: '/solicitar-ayuda', roles: ['ESTUDIANTE'] },
+    { label: 'Chat', route: '/chat', roles: ['ESTUDIANTE', 'ASESOR'] },
+    { label: 'Mis Solicitudes', route: '/mis-solicitudes-ayuda', roles: ['ESTUDIANTE'] },
+    { label: 'Mis Asesorías', route: '/mis-asesorias', roles: ['ESTUDIANTE'] },
+    { label: 'Asesorías Mentor', route: '/asesorias-mentor', roles: ['ASESOR'] },
+    { label: 'Admin Mentores', route: '/admin-mentores', roles: ['ADMINISTRADOR'] },
+  ];
 
   constructor(
     private tokenService: Token,
-    private authService: Auth
+    private authService: Auth,
+    private router: Router
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.cargarSesion();
+  }
+
+  cargarSesion(): void {
     this.isLogged = this.tokenService.isLogged();
 
     if (this.isLogged) {
-      const data = this.tokenService.verTokenDecodificado(); // 🔥 aquí
-
-      console.log('👀 Datos del token:', data);
-
-      this.user = data?.nombre || data?.name || data?.sub; // prueba campos
+      const data = this.tokenService.verTokenDecodificado();
+      this.user = data?.nombre || data?.name || data?.sub || 'Usuario';
+      this.rol = this.tokenService.getRol() || '';
+    } else {
+      this.user = '';
+      this.rol = '';
     }
   }
 
-  public async obtenerNombreUsuario(): Promise<string> {
-  const email = this.tokenService.getEmail();
-  console.log('📧 Email enviado:', email);
+  puedeVer(link: NavLink): boolean {
+    if (link.roles.length === 0) return true;
+    if (!this.isLogged) return false;
+    return link.roles.includes(this.rol);
+  }
 
-  const obtenerNombreDTO: obtenerNombreDTO = { email };
-
-  const data = await firstValueFrom(
-    this.authService.obtenerNombre(obtenerNombreDTO)
-  );
-
-  console.log('📥 Respuesta del backend:', data);
-  console.log('👤 Nombre obtenido:', data.respuesta);
-
-  return data.respuesta;
-}
-
-  public logout() {
+  logout(): void {
     this.tokenService.logout();
+    this.isLogged = false;
+    this.user = '';
+    this.rol = '';
+    this.router.navigate(['/login']);
   }
 }
