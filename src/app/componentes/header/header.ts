@@ -24,8 +24,8 @@ export class Header implements OnInit {
   sidebarOpen: boolean = false;
 
   readonly navLinks: NavLink[] = [
-    { label: 'Contenidos Académicos', route: '/contenidos-academicos', roles: ['ADMINISTRADOR', 'ESTUDIANTE'] },
-    { label: 'Subir Contenido', route: '/subir-contenido', roles: ['ASESOR', 'ADMINISTRADOR'] },
+    { label: 'Contenidos Académicos', route: '/contenidos-academicos', roles: ['ESTUDIANTE','ASESOR'] },
+    { label: 'Subir Contenido', route: '/subir-contenido', roles: ['ASESOR','ESTUDIANTE'] },
     { label: 'Agendar Asesoría', route: '/agendar-asesoria', roles: ['ESTUDIANTE'] },
     { label: 'Resolver Solicitud', route: '/resolver-solicitud', roles: ['ASESOR', 'ESTUDIANTE'] },
     { label: 'Solicitar Ayuda', route: '/solicitar-ayuda', roles: ['ESTUDIANTE'] },
