@@ -1,143 +1,147 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+  import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+  import { CommonModule } from '@angular/common';
+  import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+  import { Router } from '@angular/router';
+  import { HttpErrorResponse } from '@angular/common/http';
 
-import { SolicitudAyudaService } from '../../servicios/solicitud-ayuda';
-import { Token } from '../../servicios/token';
-import { Tema } from '../../dto/enums';
-import { CrearSolicitudAyudaDTO } from '../../dto/solicitud/crear-solicitud-ayuda.dto';
+  import { SolicitudAyudaService } from '../../servicios/solicitud-ayuda';
+  import { Token } from '../../servicios/token';
+  import { Tema } from '../../dto/enums';
+  import { CrearSolicitudAyudaDTO } from '../../dto/solicitud/crear-solicitud-ayuda.dto';
 
-@Component({
-  selector: 'app-solicitar-ayuda',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './solicitar-ayuda.html',
-  styleUrls: ['./solicitar-ayuda.css']
-})
-export class SolicitarAyudaComponent implements OnInit {
+  @Component({
+    selector: 'app-solicitar-ayuda',
+    standalone: true,
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './solicitar-ayuda.html',
+    styleUrls: ['./solicitar-ayuda.css']
+  })
+  export class SolicitarAyudaComponent implements OnInit {
 
-  public solicitudForm!: FormGroup;
-  public cargando = false;
-  public enviado = false;
-  public mensajeError = '';
-  public mensajeExito = '';
+    public solicitudForm!: FormGroup;
+    public cargando = false;
+    public enviado = false;
+    public mensajeError = '';
+    public mensajeExito = '';
 
-  public temasMock: Tema[] = [
-    Tema.MATEMATICAS,
-    Tema.LENGUAJE,
-    Tema.CIENCIAS_NATURALES,
-    Tema.CIENCIAS_SOCIALES,
-    Tema.INGLES,
-    Tema.TECNOLOGIA,
-    Tema.INFORMATICA,
-    Tema.OTRO
-  ];
+    public temasMock: Tema[] = [
+      Tema.MATEMATICAS,
+      Tema.LENGUAJE,
+      Tema.CIENCIAS_NATURALES,
+      Tema.CIENCIAS_SOCIALES,
+      Tema.INGLES,
+      Tema.TECNOLOGIA,
+      Tema.INFORMATICA,
+      Tema.OTRO
+    ];
 
-  public nivelesUrgencia: number[] = [1, 2, 3, 4, 5];
+    public nivelesUrgencia: number[] = [1, 2, 3, 4, 5];
 
-  constructor(
-    private fb: FormBuilder,
-    private cdr: ChangeDetectorRef,
-    private router: Router,
-    private solicitudAyudaService: SolicitudAyudaService,
-    private tokenService: Token
-  ) {
-    this.initForm();
-  }
-
-  ngOnInit(): void {}
-
-  private initForm(): void {
-    this.solicitudForm = this.fb.group({
-      tema: ['', [Validators.required]],
-      urgencia: ['', [Validators.required]],
-      descripcion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
-    });
-  }
-
-  private obtenerSolicitanteId(): string | null {
-    const data = this.tokenService.verTokenDecodificado();
-    console.log('🔐 Token decodificado:', data);
-
-    return data?.id || data?._id || data?.userId || null;
-  }
-
-  public formatearTema(tema: string): string {
-    return tema
-      .toLowerCase()
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, letra => letra.toUpperCase());
-  }
-
-  public enviarSolicitud(): void {
-    if (this.solicitudForm.invalid) {
-      this.solicitudForm.markAllAsTouched();
-      return;
+    constructor(
+      private fb: FormBuilder,
+      private cdr: ChangeDetectorRef,
+      private router: Router,
+      private solicitudAyudaService: SolicitudAyudaService,
+      private tokenService: Token
+    ) {
+      this.initForm();
     }
 
-    const solicitanteId = this.obtenerSolicitanteId();
+    ngOnInit(): void {}
 
-    if (!solicitanteId) {
-      this.mensajeError = 'No fue posible identificar el usuario autenticado.';
-      return;
+    private initForm(): void {
+      this.solicitudForm = this.fb.group({
+        tema: ['', [Validators.required]],
+        urgencia: ['', [Validators.required]],
+        descripcion: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(1000)]]
+      });
     }
 
-    this.cargando = true;
-    this.enviado = false;
-    this.mensajeError = '';
-    this.mensajeExito = '';
+    private obtenerSolicitanteId(): string | null {
+      const data = this.tokenService.verTokenDecodificado();
+      console.log('🔐 Token decodificado:', data);
 
-    const dto: CrearSolicitudAyudaDTO = {
-      tema: this.solicitudForm.value.tema,
-      urgencia: Number(this.solicitudForm.value.urgencia),
-      solicitanteId: solicitanteId,
-      descripcion: this.solicitudForm.value.descripcion.trim()
-    };
+      return data?.id || data?._id || data?.userId || null;
+    }
 
-    console.log('DTO a enviar:', dto);
+    public formatearTema(tema: string): string {
+      return tema
+        .toLowerCase()
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, letra => letra.toUpperCase());
+    }
 
-    this.solicitudAyudaService.crearSolicitud(dto).subscribe({
-      next: (resp) => {
-        this.cargando = false;
-        this.enviado = true;
-        this.mensajeExito = resp.mensaje || 'Solicitud enviada correctamente.';
-        this.solicitudForm.reset();
-        this.cdr.detectChanges();
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('❌ Error al crear solicitud:', error);
-        this.cargando = false;
-        this.mensajeError =
-          error.error?.mensaje ||
-          error.error?.respuesta ||
-          'No fue posible enviar la solicitud.';
-        this.cdr.detectChanges();
+    public enviarSolicitud(): void {
+      if (this.solicitudForm.invalid) {
+        this.solicitudForm.markAllAsTouched();
+        return;
       }
-    });
-  }
 
-  public verSolicitudes(): void {
-    this.router.navigate(['/solicitudes']);
-  }
+      const solicitanteId = this.obtenerSolicitanteId();
 
-  public volver(): void {
-    window.history.back();
-  }
+      if (!solicitanteId) {
+        this.mensajeError = 'No fue posible identificar el usuario autenticado.';
+        return;
+      }
 
-  get campoTemaError(): boolean {
-    const control = this.solicitudForm.get('tema');
-    return !!(control && control.invalid && control.touched);
-  }
+      this.cargando = true;
+      this.enviado = false;
+      this.mensajeError = '';
+      this.mensajeExito = '';
 
-  get campoUrgenciaError(): boolean {
-    const control = this.solicitudForm.get('urgencia');
-    return !!(control && control.invalid && control.touched);
-  }
+      const dto: CrearSolicitudAyudaDTO = {
+        tema: this.solicitudForm.value.tema,
+        urgencia: Number(this.solicitudForm.value.urgencia),
+        solicitanteId: solicitanteId,
+        descripcion: this.solicitudForm.value.descripcion.trim()
+      };
 
-  get campoDescripcionError(): boolean {
-    const control = this.solicitudForm.get('descripcion');
-    return !!(control && control.invalid && control.touched);
+      console.log('DTO a enviar:', dto);
+
+      this.solicitudAyudaService.crearSolicitud(dto).subscribe({
+        next: (resp) => {
+          this.cargando = false;
+          this.enviado = true;
+          this.mensajeExito = resp.mensaje || 'Solicitud enviada correctamente.';
+          this.solicitudForm.reset();
+          this.cdr.detectChanges();
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('❌ Error al crear solicitud:', error);
+          this.cargando = false;
+          this.mensajeError =
+            error.error?.mensaje ||
+            error.error?.respuesta ||
+            'No fue posible enviar la solicitud.';
+          this.cdr.detectChanges();
+        }
+      });
+    }
+
+    public verSolicitudes(): void {
+      this.router.navigate(['/mis-solicitudes-ayuda']);
+    }
+
+    public volver(): void {
+      this.router.navigate(['/contenidos-academicos']);
+    }
+
+    public verCoursera(): void {
+      window.open('https://www.coursera.org/courses?query=free', '_blank');
+    }
+
+    get campoTemaError(): boolean {
+      const control = this.solicitudForm.get('tema');
+      return !!(control && control.invalid && control.touched);
+    }
+
+    get campoUrgenciaError(): boolean {
+      const control = this.solicitudForm.get('urgencia');
+      return !!(control && control.invalid && control.touched);
+    }
+
+    get campoDescripcionError(): boolean {
+      const control = this.solicitudForm.get('descripcion');
+      return !!(control && control.invalid && control.touched);
+    }
   }
-}
