@@ -1,15 +1,17 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { SolicitudAyudaService } from '../../servicios/solicitud-ayuda';
 import { RespuestaSolicitudService } from '../../servicios/respuesta-solicitud';
 import { ContenidosAcademicosService } from '../../servicios/contenido-academico';
+import { ChatService } from '../../servicios/chat';
 import { Token } from '../../servicios/token';
 
 import { InformacionSolicitudAyudaDTO } from '../../dto/solicitud/informacion-solicitud-ayuda.dto';
 import { EstadoSolicitud } from '../../dto/enums';
+import { CrearChatDTO } from '../../dto/chat/crear-chat.dto';
 import { InformacionRespuestaSolicitudDTO } from '../../dto/solicitud/informacion-respuesta-solicitud';
 
 @Component({
@@ -26,14 +28,17 @@ export class DetalleMiSolicitudComponent implements OnInit {
 
   cargando = false;
   cerrando = false;
+  abriendoChat = false;
   mensajeError = '';
   mensajeExito = '';
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private solicitudAyudaService: SolicitudAyudaService,
     private respuestaSolicitudService: RespuestaSolicitudService,
     private contenidoAcademicoService: ContenidosAcademicosService,
+    private chatService: ChatService,
     private tokenService: Token,
     private cdr: ChangeDetectorRef
   ) {}
@@ -52,9 +57,13 @@ export class DetalleMiSolicitudComponent implements OnInit {
     });
   }
 
-  private obtenerSolicitanteId(): string | null {
+  private obtenerUsuarioActual(): { id: string | null; nombre: string } {
     const data = this.tokenService.verTokenDecodificado();
-    return data?.id || data?._id || data?.userId || null;
+
+    return {
+      id: data?.id || data?._id || data?.userId || null,
+      nombre: data?.nombre || data?.name || 'Usuario'
+    };
   }
 
   private cargarDetalle(): void {
@@ -102,9 +111,9 @@ export class DetalleMiSolicitudComponent implements OnInit {
   }
 
   public cerrarSolicitud(): void {
-    const solicitanteId = this.obtenerSolicitanteId();
+    const usuario = this.obtenerUsuarioActual();
 
-    if (!solicitanteId || !this.solicitud) {
+    if (!usuario.id || !this.solicitud) {
       this.mensajeError = 'No fue posible cerrar la solicitud.';
       return;
     }
@@ -115,7 +124,7 @@ export class DetalleMiSolicitudComponent implements OnInit {
 
     this.solicitudAyudaService.cerrarSolicitud({
       solicitudId: this.solicitud.id,
-      solicitanteId
+      solicitanteId: usuario.id
     }).subscribe({
       next: (resp) => {
         this.mensajeExito = resp.mensaje || 'Solicitud cerrada correctamente.';
@@ -164,6 +173,78 @@ export class DetalleMiSolicitudComponent implements OnInit {
       error: (error) => {
         console.error('❌ Error al abrir contenido relacionado:', error);
         this.mensajeError = 'No fue posible abrir el contenido relacionado.';
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  public chatearConUsuario(usuarioDestinoId: string): void {
+    const usuarioActual = this.obtenerUsuarioActual();
+
+    if (!usuarioActual.id) {
+      this.mensajeError = 'No fue posible identificar el usuario autenticado.';
+      return;
+    }
+
+    if (!usuarioDestinoId) {
+      this.mensajeError = 'No fue posible identificar el destinatario.';
+      return;
+    }
+
+    if (usuarioActual.id === usuarioDestinoId) {
+      this.mensajeError = 'No puedes abrir un chat contigo mismo.';
+      return;
+    }
+
+    this.abriendoChat = true;
+    this.mensajeError = '';
+    this.cdr.detectChanges();
+
+    this.chatService.obtenerChatsEntreUsuarios(usuarioActual.id, usuarioDestinoId).subscribe({
+      next: (resp) => {
+        const chats = Array.isArray(resp?.datos) ? resp.datos : [];
+
+        if (chats.length > 0) {
+          this.abriendoChat = false;
+          this.router.navigate(['/chat', chats[0].id]);
+          return;
+        }
+
+        const dto: CrearChatDTO = {
+          usuario1Id: usuarioActual.id!,
+          usuario2Id: usuarioDestinoId
+        };
+
+        this.chatService.crearChat(dto).subscribe({
+          next: (crearResp) => {
+            const chatId = crearResp?.datos;
+            this.abriendoChat = false;
+
+            if (chatId) {
+              this.router.navigate(['/chat', chatId]);
+            } else {
+              this.mensajeError = 'No fue posible abrir el chat.';
+              this.cdr.detectChanges();
+            }
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error('❌ Error al crear chat:', error);
+            this.abriendoChat = false;
+            this.mensajeError =
+              error.error?.mensaje ||
+              error.error?.respuesta ||
+              'No fue posible crear el chat.';
+            this.cdr.detectChanges();
+          }
+        });
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('❌ Error al consultar chats:', error);
+        this.abriendoChat = false;
+        this.mensajeError =
+          error.error?.mensaje ||
+          error.error?.respuesta ||
+          'No fue posible abrir el chat.';
         this.cdr.detectChanges();
       }
     });

@@ -119,12 +119,23 @@
                 <button
                   type="button"
                   class="btn-link-adjunto"
-                  (click)="abrirContenidoRelacionado(respuesta.contenidoAcademicoId!)">
+                  (click)="abrirContenidoRelacionado(respuesta.contenidoAcademicoId)">
                   <i class="fa-solid fa-file-lines me-2"></i>
                   Ver contenido relacionado: {{ respuesta.contenidoAcademicoId }}
                 </button>
               </div>
             }
+
+            <div class="mt-3">
+              <button
+                type="button"
+                class="btn-link-adjunto"
+                [disabled]="abriendoChat"
+                (click)="chatearConUsuario(respuesta.autorId)">
+                <i class="fa-solid fa-comment-dots me-2"></i>
+                {{ abriendoChat ? 'Abriendo chat...' : 'Enviar mensaje' }}
+              </button>
+            </div>
           </div>
         }
       </div>

@@ -11,7 +11,7 @@ import { SubirContenidoAcademico } from './componentes/subir-contenido-academico
 import { AgendarAsesoriaComponent } from './componentes/agendar-asesoria/agendar-asesoria';
 import { ResolverSolicitudComponent } from './componentes/resolver-solicitud/resolver-solicitud';
 import { SolicitarAyudaComponent } from './componentes/solicitar-ayuda/solicitar-ayuda';
-import { ChatComponent } from './componentes/chat/html';
+import { ChatComponent } from './componentes/chat/chat';
 import { MisAsesoriasComponent } from './componentes/mis-asesorias/mis-asesorias';
 import { AsesoriasMentorComponent } from './componentes/asesorias-mentor/asesorias-mentor';
 import { AdminMentoresComponent } from './componentes/admin-mentores/admin-mentores';
@@ -40,6 +40,8 @@ export const routes: Routes = [
   { path: 'resolver-solicitud', component: ResolverSolicitudComponent },
   { path: 'resolver-solicitud/:id', component: ResolverSolicitudDetalleComponent },
   { path: 'mis-solicitudes-ayuda', component: MisSolicitudesAyudaComponent },
-{ path: 'mis-solicitudes-ayuda/:id', component: DetalleMiSolicitudComponent },
+  { path: 'mis-solicitudes-ayuda/:id', component: DetalleMiSolicitudComponent },
+  { path: 'chat', component: ChatComponent },
+  { path: 'chat/:id', component: ChatComponent },
 
 ];

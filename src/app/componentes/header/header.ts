@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs';
 import { Token } from '../../servicios/token';
 import { Auth } from '../../servicios/auth';
 
@@ -17,23 +18,22 @@ interface NavLink {
   styleUrl: './header.css'
 })
 export class Header implements OnInit {
-
-  title: string = '';
   isLogged: boolean = false;
   user: string = '';
   rol: string = '';
+  sidebarOpen: boolean = false;
 
   readonly navLinks: NavLink[] = [
     { label: 'Contenidos Académicos', route: '/contenidos-academicos', roles: ['ADMINISTRADOR', 'ESTUDIANTE'] },
     { label: 'Subir Contenido', route: '/subir-contenido', roles: ['ASESOR', 'ADMINISTRADOR'] },
     { label: 'Agendar Asesoría', route: '/agendar-asesoria', roles: ['ESTUDIANTE'] },
-    { label: 'Resolver Solicitud', route: '/resolver-solicitud', roles: ['ASESOR','ESTUDIANTE'] },
+    { label: 'Resolver Solicitud', route: '/resolver-solicitud', roles: ['ASESOR', 'ESTUDIANTE'] },
     { label: 'Solicitar Ayuda', route: '/solicitar-ayuda', roles: ['ESTUDIANTE'] },
     { label: 'Chat', route: '/chat', roles: ['ESTUDIANTE', 'ASESOR'] },
     { label: 'Mis Solicitudes', route: '/mis-solicitudes-ayuda', roles: ['ESTUDIANTE'] },
     { label: 'Mis Asesorías', route: '/mis-asesorias', roles: ['ESTUDIANTE'] },
     { label: 'Asesorías Mentor', route: '/asesorias-mentor', roles: ['ASESOR'] },
-    { label: 'Admin Mentores', route: '/admin-mentores', roles: ['ADMINISTRADOR'] },
+    { label: 'Admin Mentores', route: '/admin-mentores', roles: ['ADMINISTRADOR'] }
   ];
 
   constructor(
@@ -44,6 +44,13 @@ export class Header implements OnInit {
 
   ngOnInit(): void {
     this.cargarSesion();
+
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.cerrarSidebar();
+        this.cargarSesion();
+      });
   }
 
   cargarSesion(): void {
@@ -65,11 +72,20 @@ export class Header implements OnInit {
     return link.roles.includes(this.rol);
   }
 
+  toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  cerrarSidebar(): void {
+    this.sidebarOpen = false;
+  }
+
   logout(): void {
     this.tokenService.logout();
     this.isLogged = false;
     this.user = '';
     this.rol = '';
+    this.sidebarOpen = false;
     this.router.navigate(['/login']);
   }
 }

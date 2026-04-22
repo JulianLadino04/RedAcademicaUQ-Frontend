@@ -36,9 +36,7 @@ export class Token {
 
   public logout() {
     window.sessionStorage.clear();
-    this.router.navigate(["/login"]).then(() => {
-    window.location.reload();
-    });
+    this.router.navigate(['/login'], { replaceUrl: true });
   }
 
   private decodePayload(token: string): any {
