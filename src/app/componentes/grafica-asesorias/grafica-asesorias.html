@@ -1,52 +1,71 @@
-<div class="container mt-4 mb-5">
+<div class="asesor-estadisticas-page">
 
-  <div class="mb-4 text-center">
+  <section class="asesor-estadisticas-header">
     <h2 class="titulo-principal">Estadísticas del Asesor</h2>
     <p class="subtitulo">
       Visualiza el estado de tus asesorías registradas en la plataforma.
     </p>
-  </div>
+  </section>
 
   @if (cargando) {
 
-    <div class="cargando text-center">
+    <section class="estado-card cargando">
       <div class="spinner-border text-primary"></div>
-      <p class="mt-2">Cargando estadísticas...</p>
-    </div>
+      <p>Cargando estadísticas...</p>
+    </section>
 
   } @else {
 
     @if (datos.length === 0) {
 
-      <div class="empty-state text-center">
+      <section class="estado-card empty-state">
         <div class="empty-icon">
           <i class="pi pi-chart-bar"></i>
         </div>
-        <p>No hay datos disponibles para mostrar.</p>
-      </div>
+        <h3>No hay datos disponibles</h3>
+        <p>Aún no tienes asesorías registradas para mostrar estadísticas.</p>
+      </section>
 
     } @else {
 
-      <div class="d-flex justify-content-center">
+      <section class="asesor-estadisticas-layout">
 
-        <div class="estadistica-card text-center">
+        <aside class="panel-lateral">
+
+          <div class="resumen-card">
+            <h4 class="resumen-titulo">Resumen de asesorías</h4>
+
+            <div class="total-card">
+              <span>Total registradas</span>
+              <strong>{{ obtenerTotalAsesorias() }}</strong>
+            </div>
+
+            @for (item of datos; track item.estado) {
+              <div class="dato-item">
+                <span class="dato-nombre">{{ item.estado }}</span>
+                <strong class="dato-valor">{{ item.total }}</strong>
+              </div>
+            }
+          </div>
+
+        </aside>
+
+        <section class="estadistica-card">
 
           <div class="estadistica-header">
-            <div class="estadistica-titulo">
-              Asesorías por estado
-            </div>
-            <div class="estadistica-sub">
-              Distribución de asesorías registradas
-            </div>
+            <h3 class="estadistica-titulo">Asesorías por estado</h3>
+            <p class="estadistica-sub">
+              Distribución de asesorías registradas según su estado actual.
+            </p>
           </div>
 
           <div class="grafica-container">
             <canvas #graficaEstados></canvas>
           </div>
 
-        </div>
+        </section>
 
-      </div>
+      </section>
 
     }
 

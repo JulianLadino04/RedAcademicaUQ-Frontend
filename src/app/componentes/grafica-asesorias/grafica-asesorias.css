@@ -1,196 +1,230 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap');
 
 :host {
   display: block;
 
-  /* =========================
-     COLOR PRINCIPAL (marca)
-  ========================= */
-
   --accent: #1a56a0;
-  --accent-dark: #143e7a;
-  --accent-soft: #eaf2fd;
-  --accent-soft-2: #f4f8fe;
   --accent-border: #cadef8;
-
-  /* =========================
-     COLORES PARA GRÁFICAS
-  ========================= */
-
-  --chart-blue: #3B82F6;
-  --chart-green: #10B981;
-  --chart-orange: #F59E0B;
-  --chart-red: #EF4444;
-  --chart-purple: #8B5CF6;
-  --chart-cyan: #06B6D4;
-
-  /* =========================
-     SUPERFICIES
-  ========================= */
+  --accent-soft: #eaf2fd;
 
   --surface: #ffffff;
-  --surface-2: #f8fbff;
-  --page-bg: #f3f6fb;
-
-  /* =========================
-     TEXTO
-  ========================= */
-
   --text-primary: #162033;
   --text-secondary: #5f6b85;
-  --text-light: #8c97ab;
 
-  /* =========================
-     BORDES
-  ========================= */
+  --border: #e3ebf5;
 
-  --border: #dbe4f0;
-  --border-strong: #c6d3e3;
-
-  /* =========================
-     SOMBRAS
-  ========================= */
-
-  --shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.06);
   --shadow-md: 0 12px 30px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.12);
+  --shadow-lg: 0 20px 45px rgba(15, 23, 42, 0.12);
 
-  /* =========================
-     RADIOS
-  ========================= */
-
-  --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 22px;
 
-  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 0.25s ease;
 }
 
-/* =========================
-   CONTENEDOR GENERAL
-========================= */
-
-.container.mt-4.mb-5 {
+.asesor-estadisticas-page {
   font-family: 'DM Sans', sans-serif;
-  background: linear-gradient(180deg, #f8fbff 0%, #f3f7fc 100%);
+  max-width: 1180px;
+  margin: 1.5rem auto 3rem auto;
+  padding: 1.5rem;
   border-radius: var(--radius-lg);
-  padding: 2rem;
+  background: linear-gradient(180deg, #f8fbff 0%, #f3f7fc 100%);
 }
 
-/* =========================
-   ENCABEZADO
-========================= */
+.asesor-estadisticas-header {
+  text-align: center;
+  margin-bottom: 1.3rem;
+}
 
 .titulo-principal {
   font-family: 'Playfair Display', serif;
-  font-size: 2rem;
+  font-size: 2.1rem;
   color: var(--text-primary);
+  margin-bottom: 0.4rem;
 }
 
 .subtitulo {
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   color: var(--text-secondary);
+  margin: 0;
 }
 
-/* =========================
-   GRID DE ESTADISTICAS
-========================= */
+.asesor-estadisticas-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 22px;
+  align-items: stretch;
+}
 
-.estadisticas-grid {
+.panel-lateral {
   display: flex;
-  justify-content: center;
-  margin-top: 25px;
+  flex-direction: column;
+  gap: 18px;
 }
 
-/* =========================
-   TARJETAS DE GRAFICAS
-========================= */
+.resumen-card {
+  width: 100%;
+  padding: 1.2rem;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+
+.resumen-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.total-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #eaf2fd 0%, #f6faff 100%);
+  border: 1px solid var(--accent-border);
+}
+
+.total-card span {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.total-card strong {
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.dato-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #edf2f8;
+}
+
+.dato-item:last-child {
+  border-bottom: none;
+}
+
+.dato-nombre {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.25;
+}
+
+.dato-valor {
+  min-width: 42px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.92rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .estadistica-card {
-  width: 520px;
-  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  min-height: 430px;
+  padding: 1.5rem;
   border-radius: var(--radius-lg);
   background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+  border: 1px solid var(--border);
   box-shadow: var(--shadow-md);
-  padding: 1.4rem;
-  transition:
-    transform var(--transition),
-    box-shadow var(--transition),
-    border-color var(--transition);
-  position: relative;
+  transition: all var(--transition);
 }
 
 .estadistica-card::before {
   content: "";
-  display: block;
-  height: 6px;
-  width: 100%;
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  background: linear-gradient(
-    90deg,
-    var(--accent) 0%,
-    #3d7ed1 55%,
-    #9fc6f7 100%
-  );
   position: absolute;
   top: 0;
   left: 0;
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    #3d7ed1 50%,
+    #9fc6f7 100%
+  );
 }
 
 .estadistica-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
   border-color: var(--accent-border);
 }
 
-/* =========================
-   TITULO DE GRAFICA
-========================= */
-
-.estadistica-titulo {
-  font-size: 1.1rem;
-  font-weight: 700;
+.estadistica-header {
   text-align: center;
-  color: var(--text-primary);
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
 }
 
-/* =========================
-   GRAFICAS
-========================= */
+.estadistica-titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.estadistica-sub {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.grafica-container {
+  position: relative;
+  width: 100%;
+  height: 330px;
+}
 
 canvas {
   width: 100% !important;
-  height: 340px !important;
+  height: 100% !important;
 }
 
-/* =========================
-   ESTADO DE CARGA
-========================= */
-
-.cargando {
-  text-align: center;
+.estado-card {
+  min-height: 280px;
   padding: 2rem;
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+}
+
+.cargando p {
+  margin-top: 0.8rem;
   color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
 .spinner-border.text-primary {
   color: var(--accent) !important;
 }
 
-/* =========================
-   ESTADO VACIO
-========================= */
-
-.empty-state {
-  padding: 2.5rem 1rem;
-  text-align: center;
-}
-
 .empty-icon {
-  width: 88px;
-  height: 88px;
-  margin: 0 auto 15px auto;
+  width: 86px;
+  height: 86px;
+  margin-bottom: 1rem;
   border-radius: 50%;
   background: linear-gradient(180deg, #eef4fd 0%, #e4eefb 100%);
   display: flex;
@@ -201,86 +235,57 @@ canvas {
 .empty-icon i {
   font-size: 2rem;
   color: var(--accent);
-  opacity: 0.7;
+  opacity: 0.8;
+}
+
+.empty-state h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
 }
 
 .empty-state p {
   font-size: 0.95rem;
   color: var(--text-secondary);
+  margin: 0;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+@media (max-width: 991px) {
+  .asesor-estadisticas-layout {
+    grid-template-columns: 1fr;
+  }
+}
 
 @media (max-width: 768px) {
+  .asesor-estadisticas-page {
+    padding: 1.2rem;
+    margin-top: 1rem;
+  }
 
   .titulo-principal {
     font-size: 1.7rem;
   }
 
   .estadistica-card {
-    width: 100%;
-  }
-
-}
-
-@media (max-width: 576px) {
-
-  .container.mt-4.mb-5 {
+    min-height: auto;
     padding: 1.2rem;
   }
 
-  canvas {
-    height: 260px !important;
+  .grafica-container {
+    height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .asesor-estadisticas-page {
+    padding: 1rem;
   }
 
-}
+  .grafica-container {
+    height: 260px;
+  }
 
-/* =========================
-   HEADER DE TARJETA
-========================= */
-
-.estadistica-header {
-  margin-bottom: 20px;
-}
-
-.estadistica-sub {
-  font-size: 0.85rem;
-  color: var(--text-light);
-}
-
-/* =========================
-   CONTENEDOR DE GRAFICA
-========================= */
-
-.grafica-container {
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: radial-gradient(circle at center, #f7faff 0%, #eef4fc 100%);
-  border-radius: var(--radius-md);
-
-  padding: 20px;
-  margin-top: 10px;
-
-  border: 1px solid var(--border);
-}
-
-/* =========================
-   GRAFICA
-========================= */
-
-canvas {
-
-  max-width: 360px !important;
-  max-height: 360px !important;
-
-  transition: transform 0.4s ease;
-}
-
-.estadistica-card:hover canvas {
-  transform: scale(1.04);
+  .estadistica-titulo {
+    font-size: 1.1rem;
+  }
 }
