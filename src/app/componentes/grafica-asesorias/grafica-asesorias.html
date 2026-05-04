@@ -1,0 +1,55 @@
+<div class="container mt-4 mb-5">
+
+  <div class="mb-4 text-center">
+    <h2 class="titulo-principal">Estadísticas del Asesor</h2>
+    <p class="subtitulo">
+      Visualiza el estado de tus asesorías registradas en la plataforma.
+    </p>
+  </div>
+
+  @if (cargando) {
+
+    <div class="cargando text-center">
+      <div class="spinner-border text-primary"></div>
+      <p class="mt-2">Cargando estadísticas...</p>
+    </div>
+
+  } @else {
+
+    @if (datos.length === 0) {
+
+      <div class="empty-state text-center">
+        <div class="empty-icon">
+          <i class="pi pi-chart-bar"></i>
+        </div>
+        <p>No hay datos disponibles para mostrar.</p>
+      </div>
+
+    } @else {
+
+      <div class="d-flex justify-content-center">
+
+        <div class="estadistica-card text-center">
+
+          <div class="estadistica-header">
+            <div class="estadistica-titulo">
+              Asesorías por estado
+            </div>
+            <div class="estadistica-sub">
+              Distribución de asesorías registradas
+            </div>
+          </div>
+
+          <div class="grafica-container">
+            <canvas #graficaEstados></canvas>
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+  }
+
+</div>

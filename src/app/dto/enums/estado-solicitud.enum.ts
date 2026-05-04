@@ -1,6 +1,5 @@
 export enum EstadoSolicitud {
   ABIERTA = 'ABIERTA',
-  RESUELTA = 'RESUELTA',
-  CERRADA = 'CERRADA',
-  ATENDIDA = 'ATENDIDA'
+  EN_PROCESO = 'EN_PROCESO',
+  CERRADA = 'CERRADA'
 }

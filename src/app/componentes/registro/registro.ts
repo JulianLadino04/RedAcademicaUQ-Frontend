@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AbstractControlOptions, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from
 '@angular/forms';
 import { CrearEstudianteDTO } from '../../dto/estudiante/crear-estudiante.dto';
@@ -16,7 +17,7 @@ styleUrl: './registro.css'
 
 export class Registro{
 registroForm!: FormGroup;
-constructor(private formBuilder: FormBuilder, private authService: Auth) {
+constructor(private formBuilder: FormBuilder, private authService: Auth, private router: Router) {
   this.crearFormulario();
  }
 
@@ -64,6 +65,8 @@ public registrar() {
         text: 'La cuenta se ha creado correctamente',
         icon: 'success',
         confirmButtonText: 'Aceptar'
+      }).then(() => {
+        this.router.navigate(['/login']);
       });
     },
     error: (error: any) => {
@@ -75,5 +78,4 @@ public registrar() {
       });
     }
   });
-}
-}
+}}

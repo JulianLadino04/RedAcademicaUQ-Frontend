@@ -5,6 +5,7 @@ import { CrearAsesoriaDTO } from '../dto/asesoria/crear-asesoria.dto';
 import { ResponseDTO } from '../dto/shared/response.dto';
 import { InformacionAsesoriaDTO } from '../dto/asesoria/informacion-asesoria.dto';
 import { EstadoAsesoria } from '../dto/enums';
+import { GraficaEstadoAsesoriaDTO } from '../dto/estadistica/estadistica-asesoria-asesor-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -54,4 +55,9 @@ export class AsesoriaService {
     return this.http.get<ResponseDTO<InformacionAsesoriaDTO[]>>(`${this.asesoriaURL}/obtener-asesorias`);
   }
 
+  public graficaEstadosPorAsesor(asesorId: string): Observable<ResponseDTO<GraficaEstadoAsesoriaDTO[]>> {
+  return this.http.get<ResponseDTO<GraficaEstadoAsesoriaDTO[]>>(
+    `${this.asesoriaURL}/asesor/${asesorId}/grafica-estados`
+  );
+  }
 }

@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600&display=swap');
+
+:host {
+  display: block;
+
+  --accent: #1a56a0;
+  --accent-dark: #143e7a;
+  --accent-soft: #eaf2fd;
+  --accent-soft-2: #f4f8fe;
+  --accent-border: #cadef8;
+
+  --surface: #ffffff;
+  --surface-2: #f8fbff;
+  --page-bg: #f3f6fb;
+
+  --text-primary: #162033;
+  --text-secondary: #5f6b85;
+  --text-light: #8c97ab;
+
+  --border: #e3ebf5;
+  --border-strong: #c6d3e3;
+
+  --shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 12px 30px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 45px rgba(15, 23, 42, 0.12);
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================
+   CONTENEDOR GENERAL
+========================= */
+
+.container.mt-4.mb-5 {
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(180deg, #f8fbff 0%, #f3f7fc 100%);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem;
+}
+
+/* =========================
+   ENCABEZADO
+========================= */
+
+.titulo-principal {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+}
+
+.subtitulo {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* =========================
+   GRID DE ESTADISTICAS
+========================= */
+
+.estadisticas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  margin-top: 25px;
+}
+
+/* =========================
+   TARJETAS DE GRAFICAS
+========================= */
+
+.estadistica-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+  box-shadow: var(--shadow-md);
+  padding: 1.8rem;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.estadistica-card::before {
+  content: "";
+  height: 5px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    #3d7ed1 50%,
+    #9fc6f7 100%
+  );
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.estadistica-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-border);
+}
+
+/* =========================
+   TITULO DE GRAFICA
+========================= */
+
+.estadistica-titulo {
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-align: center;
+  color: var(--text-primary);
+  margin-bottom: 18px;
+}
+
+/* =========================
+   GRAFICAS
+========================= */
+
+canvas {
+  width: 100% !important;
+  height: 320px !important;
+  padding: 10px;
+}
+
+/* =========================
+   LEYENDAS CHART.JS
+========================= */
+
+.chartjs-legend ul {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.chartjs-legend li {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chartjs-legend li span {
+  border-radius: 4px !important;
+}
+
+/* =========================
+   TOOLTIP
+========================= */
+
+.chartjs-tooltip {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+
+/* =========================
+   ESTADO DE CARGA
+========================= */
+
+.cargando {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.spinner-border.text-primary {
+  color: var(--accent) !important;
+}
+
+/* =========================
+   ESTADO VACIO
+========================= */
+
+.empty-state {
+  padding: 2.5rem 1rem;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 15px auto;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #eef4fd 0%, #e4eefb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-icon i {
+  font-size: 2rem;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.empty-state p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 991px) {
+
+  .estadisticas-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .titulo-principal {
+    font-size: 1.7rem;
+  }
+
+}
+
+@media (max-width: 576px) {
+
+  .container.mt-4.mb-5 {
+    padding: 1.2rem;
+  }
+
+  canvas {
+    height: 260px !important;
+  }
+
+}

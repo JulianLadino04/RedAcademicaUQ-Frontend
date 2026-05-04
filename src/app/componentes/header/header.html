@@ -1,5 +1,6 @@
 <header class="main-header">
   <div class="header-container">
+
     <div class="left-section">
       @if (isLogged) {
         <button class="menu-btn" type="button" (click)="toggleSidebar()" aria-label="Abrir menú">
@@ -15,41 +16,61 @@
     </div>
 
     <div class="actions-section">
+
       @if (!isLogged) {
         <a routerLink="/login" class="btn btn-outline">Login</a>
         <a routerLink="/registro" class="btn btn-primary">Registro</a>
       } @else {
+
         <div class="user-box">
           <span class="welcome-text">Hola, {{ user }}</span>
           <span class="role-badge">{{ rol }}</span>
         </div>
-        <button type="button" (click)="logout()" class="btn btn-primary">Logout</button>
+
+        <button type="button" (click)="logout()" class="btn btn-primary">
+          Logout
+        </button>
+
       }
+
     </div>
   </div>
 </header>
 
+
 @if (isLogged) {
+
   <div class="sidebar" [class.open]="sidebarOpen">
+
     <div class="sidebar-header">
       <h3 class="sidebar-title">Menú</h3>
-      <button class="sidebar-close" type="button" (click)="toggleSidebar()" aria-label="Cerrar menú">
+
+      <button class="sidebar-close" type="button"
+              (click)="toggleSidebar()"
+              aria-label="Cerrar menú">
         ✕
       </button>
     </div>
 
     <ul class="sidebar-list">
-      @for (link of navLinks; track link.route) {
-        @if (puedeVer(link)) {
-          <li>
-            <a [routerLink]="link.route" (click)="cerrarSidebar()">
-              {{ link.label }}
-            </a>
-          </li>
-        }
+
+      @for (link of linksFiltrados; track link.route) {
+
+        <li>
+          <a [routerLink]="link.route"
+             (click)="cerrarSidebar()">
+
+            {{ link.label }}
+
+          </a>
+        </li>
+
       }
+
     </ul>
+
   </div>
+
 }
 
 @if (sidebarOpen && isLogged) {

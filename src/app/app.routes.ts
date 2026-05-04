@@ -18,6 +18,8 @@ import { AdminMentoresComponent } from './componentes/admin-mentores/admin-mento
 import { ResolverSolicitudDetalleComponent } from './componentes/resolver-solicitud-detalle/resolver-solicitud-detalle';
 import { MisSolicitudesAyudaComponent } from './componentes/mis-solicitudes-ayuda/mis-solicitudes-ayuda';
 import { DetalleMiSolicitudComponent } from './componentes/detalle-mi-solicitud/detalle-mi-solicitud';
+import { EstadisticasAdmin } from './componentes/estadisticas-admin/estadisticas-admin';
+import { GraficaAsesorias } from './componentes/grafica-asesorias/grafica-asesorias';
 
 export const routes: Routes = [
 
@@ -43,5 +45,7 @@ export const routes: Routes = [
   { path: 'mis-solicitudes-ayuda/:id', component: DetalleMiSolicitudComponent },
   { path: 'chat', component: ChatComponent },
   { path: 'chat/:id', component: ChatComponent },
+  { path: 'estadisticas-admin', component: EstadisticasAdmin },
+  { path: 'grafica-asesorias', component: GraficaAsesorias },
 
 ];

@@ -1,0 +1,286 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@600&display=swap');
+
+:host {
+  display: block;
+
+  /* =========================
+     COLOR PRINCIPAL (marca)
+  ========================= */
+
+  --accent: #1a56a0;
+  --accent-dark: #143e7a;
+  --accent-soft: #eaf2fd;
+  --accent-soft-2: #f4f8fe;
+  --accent-border: #cadef8;
+
+  /* =========================
+     COLORES PARA GRÁFICAS
+  ========================= */
+
+  --chart-blue: #3B82F6;
+  --chart-green: #10B981;
+  --chart-orange: #F59E0B;
+  --chart-red: #EF4444;
+  --chart-purple: #8B5CF6;
+  --chart-cyan: #06B6D4;
+
+  /* =========================
+     SUPERFICIES
+  ========================= */
+
+  --surface: #ffffff;
+  --surface-2: #f8fbff;
+  --page-bg: #f3f6fb;
+
+  /* =========================
+     TEXTO
+  ========================= */
+
+  --text-primary: #162033;
+  --text-secondary: #5f6b85;
+  --text-light: #8c97ab;
+
+  /* =========================
+     BORDES
+  ========================= */
+
+  --border: #dbe4f0;
+  --border-strong: #c6d3e3;
+
+  /* =========================
+     SOMBRAS
+  ========================= */
+
+  --shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 12px 30px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.12);
+
+  /* =========================
+     RADIOS
+  ========================= */
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================
+   CONTENEDOR GENERAL
+========================= */
+
+.container.mt-4.mb-5 {
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(180deg, #f8fbff 0%, #f3f7fc 100%);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+}
+
+/* =========================
+   ENCABEZADO
+========================= */
+
+.titulo-principal {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--text-primary);
+}
+
+.subtitulo {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* =========================
+   GRID DE ESTADISTICAS
+========================= */
+
+.estadisticas-grid {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+/* =========================
+   TARJETAS DE GRAFICAS
+========================= */
+
+.estadistica-card {
+  width: 520px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+  box-shadow: var(--shadow-md);
+  padding: 1.4rem;
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    border-color var(--transition);
+  position: relative;
+}
+
+.estadistica-card::before {
+  content: "";
+  display: block;
+  height: 6px;
+  width: 100%;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    #3d7ed1 55%,
+    #9fc6f7 100%
+  );
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.estadistica-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-border);
+}
+
+/* =========================
+   TITULO DE GRAFICA
+========================= */
+
+.estadistica-titulo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-primary);
+  margin-bottom: 15px;
+}
+
+/* =========================
+   GRAFICAS
+========================= */
+
+canvas {
+  width: 100% !important;
+  height: 340px !important;
+}
+
+/* =========================
+   ESTADO DE CARGA
+========================= */
+
+.cargando {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+.spinner-border.text-primary {
+  color: var(--accent) !important;
+}
+
+/* =========================
+   ESTADO VACIO
+========================= */
+
+.empty-state {
+  padding: 2.5rem 1rem;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 15px auto;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #eef4fd 0%, #e4eefb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-icon i {
+  font-size: 2rem;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.empty-state p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+  .titulo-principal {
+    font-size: 1.7rem;
+  }
+
+  .estadistica-card {
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 576px) {
+
+  .container.mt-4.mb-5 {
+    padding: 1.2rem;
+  }
+
+  canvas {
+    height: 260px !important;
+  }
+
+}
+
+/* =========================
+   HEADER DE TARJETA
+========================= */
+
+.estadistica-header {
+  margin-bottom: 20px;
+}
+
+.estadistica-sub {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+/* =========================
+   CONTENEDOR DE GRAFICA
+========================= */
+
+.grafica-container {
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: radial-gradient(circle at center, #f7faff 0%, #eef4fc 100%);
+  border-radius: var(--radius-md);
+
+  padding: 20px;
+  margin-top: 10px;
+
+  border: 1px solid var(--border);
+}
+
+/* =========================
+   GRAFICA
+========================= */
+
+canvas {
+
+  max-width: 360px !important;
+  max-height: 360px !important;
+
+  transition: transform 0.4s ease;
+}
+
+.estadistica-card:hover canvas {
+  transform: scale(1.04);
+}

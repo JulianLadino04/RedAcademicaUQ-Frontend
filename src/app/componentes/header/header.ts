@@ -18,10 +18,13 @@ interface NavLink {
   styleUrl: './header.css'
 })
 export class Header implements OnInit {
+
   isLogged: boolean = false;
   user: string = '';
   rol: string = '';
   sidebarOpen: boolean = false;
+
+  linksFiltrados: NavLink[] = [];
 
   readonly navLinks: NavLink[] = [
     { label: 'Contenidos Académicos', route: '/contenidos-academicos', roles: ['ESTUDIANTE','ASESOR'] },
@@ -33,7 +36,9 @@ export class Header implements OnInit {
     { label: 'Mis Solicitudes', route: '/mis-solicitudes-ayuda', roles: ['ESTUDIANTE'] },
     { label: 'Mis Asesorías', route: '/mis-asesorias', roles: ['ESTUDIANTE'] },
     { label: 'Asesorías Mentor', route: '/asesorias-mentor', roles: ['ASESOR'] },
-    { label: 'Admin Mentores', route: '/admin-mentores', roles: ['ADMINISTRADOR'] }
+    { label: 'Admin Mentores', route: '/admin-mentores', roles: ['ADMINISTRADOR'] },
+    { label: 'Estadisticas', route: '/estadisticas-admin', roles: ['ADMINISTRADOR'] },
+    { label: 'Estadisticas Asesoria', route: '/grafica-asesorias', roles: ['ASESOR'] },
   ];
 
   constructor(
@@ -43,6 +48,7 @@ export class Header implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     this.cargarSesion();
 
     this.router.events
@@ -51,25 +57,34 @@ export class Header implements OnInit {
         this.cerrarSidebar();
         this.cargarSesion();
       });
+
   }
 
   cargarSesion(): void {
+
     this.isLogged = this.tokenService.isLogged();
 
     if (this.isLogged) {
+
       const data = this.tokenService.verTokenDecodificado();
+
       this.user = data?.nombre || data?.name || data?.sub || 'Usuario';
       this.rol = this.tokenService.getRol() || '';
+
+      console.log("ROL DEL TOKEN:", this.rol);
+
+      this.linksFiltrados = this.navLinks.filter(link =>
+        link.roles.includes(this.rol)
+      );
+
     } else {
+
       this.user = '';
       this.rol = '';
-    }
-  }
+      this.linksFiltrados = [];
 
-  puedeVer(link: NavLink): boolean {
-    if (link.roles.length === 0) return true;
-    if (!this.isLogged) return false;
-    return link.roles.includes(this.rol);
+    }
+
   }
 
   toggleSidebar(): void {
@@ -81,11 +96,17 @@ export class Header implements OnInit {
   }
 
   logout(): void {
+
     this.tokenService.logout();
+
     this.isLogged = false;
     this.user = '';
     this.rol = '';
+    this.linksFiltrados = [];
     this.sidebarOpen = false;
+
     this.router.navigate(['/login']);
+
   }
+
 }

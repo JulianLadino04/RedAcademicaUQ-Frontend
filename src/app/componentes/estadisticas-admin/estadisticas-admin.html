@@ -1,0 +1,46 @@
+<div class="container mt-4 mb-5">
+
+  <div class="text-center mb-4">
+    <h2 class="titulo-principal">Panel de Estadísticas</h2>
+    <p class="subtitulo">Visualización general de la actividad en la plataforma</p>
+  </div>
+
+  <div class="estadisticas-grid">
+
+    <div class="estadistica-card">
+      <h3 class="estadistica-titulo">Materias más solicitadas</h3>
+      <canvas baseChart
+              [data]="materiasChartData"
+              [options]="chartOptions"
+              [type]="'bar'">
+      </canvas>
+    </div>
+
+    <div class="estadistica-card">
+      <h3 class="estadistica-titulo">Asesores más activos</h3>
+      <canvas baseChart
+              [data]="asesoresChartData"
+              [options]="chartOptions"
+              [type]="'bar'">
+      </canvas>
+    </div>
+
+    <div class="estadistica-card">
+      <h3 class="estadistica-titulo">Asesorías por estado</h3>
+      <canvas baseChart
+              [data]="asesoriasEstadoChartData"
+              [type]="'pie'">
+      </canvas>
+    </div>
+
+    <div class="estadistica-card">
+      <h3 class="estadistica-titulo">Solicitudes por estado</h3>
+      <canvas baseChart
+              [data]="solicitudesEstadoChartData"
+              [type]="'pie'">
+      </canvas>
+    </div>
+
+  </div>
+
+</div>
